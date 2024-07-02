@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/button';
+import Image from 'next/image';
 
 const HeaderSection: React.FC = () => (
   <section className="relative bg-primary-foreground py-20 lg:py-32">
@@ -22,7 +23,7 @@ const HeaderSection: React.FC = () => (
           </div>
         </div>
         <div>
-          <img
+          <Image
             src="/placeholder.svg"
             width={600}
             height={400}

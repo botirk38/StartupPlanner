@@ -17,8 +17,8 @@ const TestimonialsSection: React.FC = () => (
             <QuoteIcon className="w-8 h-8 text-primary" />
           </div>
           <p className="text-foreground mb-4">
-            "Canva Startup Planner has been a game-changer for my business. The Business Plan Generator helped me
-            create a professional and comprehensive plan in no time."
+            &quot;Canva Startup Planner has been a game-changer for my business. The Business Plan Generator helped me
+            create a professional and comprehensive plan in no time.&quot;
           </p>
           <div className="flex items-center">
             <Avatar>
@@ -36,8 +36,8 @@ const TestimonialsSection: React.FC = () => (
             <QuoteIcon className="w-8 h-8 text-primary" />
           </div>
           <p className="text-foreground mb-4">
-            "The Copywriting Tool has been a lifesaver for my marketing efforts. It helps me create compelling copy
-            that resonates with my target audience."
+            &quot;The Copywriting Tool has been a lifesaver for my marketing efforts. It helps me create compelling copy
+            that resonates with my target audience.&quot;
           </p>
           <div className="flex items-center">
             <Avatar>
@@ -55,8 +55,8 @@ const TestimonialsSection: React.FC = () => (
             <QuoteIcon className="w-8 h-8 text-primary" />
           </div>
           <p className="text-foreground mb-4">
-            "The Logo and Branding Generator has been a game-changer for my business. It helped me create a
-            professional and memorable brand identity."
+            &quot;The Logo and Branding Generator has been a game-changer for my business. It helped me create a
+            professional and memorable brand identity.&quot;
           </p>
           <div className="flex items-center">
             <Avatar>
