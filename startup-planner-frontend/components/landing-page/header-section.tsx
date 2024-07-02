@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const HeaderSection: React.FC = () => (
   <section className="relative bg-primary-foreground py-20 lg:py-32">
@@ -15,11 +16,13 @@ const HeaderSection: React.FC = () => (
           </p>
           <div className="flex flex-wrap gap-4">
             <Button variant="default" size="lg">
-              Signup
+              Sign up
             </Button>
-            <Button variant="outline" size="lg" className="text-primary-background">
-              Learn More
-            </Button>
+            <Link href="#about">
+              <Button variant="outline" size="lg" className="text-primary-background">
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
         <div>

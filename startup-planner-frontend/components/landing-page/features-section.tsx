@@ -5,7 +5,7 @@ import PencilIcon from '../icons/pencil-icon';
 import ImageIcon from '../icons/image-icon';
 
 const FeaturesSection: React.FC = () => (
-  <section className="py-16 lg:py-24">
+  <section className="py-16 lg:py-24" id="features">
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-12">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-4">Powerful Features</h2>
