@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
 import CanvaIcon from '@/components/icons/canva-icon';
+import { useRouter } from 'next/navigation';
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -36,6 +37,7 @@ export default function LoginPage() {
   });
 
   const { toast } = useToast();
+  const router = useRouter();
 
   const onSubmit = (values: LoginFormValues) => {
     // Handle form submission, e.g., call API
@@ -125,7 +127,7 @@ export default function LoginPage() {
         </Form>
 
         <div>
-          <Button className='gap-2'>
+          <Button className='gap-2' onClick={() => router.push("/api/canva/auth/callback")}>
             Login with
             <CanvaIcon />
           </Button>
