@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from canva_auth.views import canva_auth, canva_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/canva/auth/', canva_auth, name='canva_auth'),
+    path('api/canva/callback/', canva_callback, name='canva_callback'),
+    # Include other URLs as needed
 ]
