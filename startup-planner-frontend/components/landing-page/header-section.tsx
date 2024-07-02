@@ -24,7 +24,7 @@ const HeaderSection: React.FC = () => (
         </div>
         <div>
           <Image
-            src="/placeholder.svg"
+            src="/hero-img.webp"
             width={600}
             height={400}
             alt="Startup Planner App Hero Image"
