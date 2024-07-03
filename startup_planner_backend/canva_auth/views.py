@@ -10,8 +10,12 @@ from django.contrib.auth import get_user_model, login
 from django.utils import timezone
 import requests
 from datetime import timedelta
+import logging
+from .models import OAuthState
 
 User = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 
 def generate_code_verifier():
@@ -33,9 +37,10 @@ def canva_auth(request):
     code_challenge = generate_code_challenge(code_verifier)
     state = generate_state()
 
-    # Store code_verifier and state in the session
-    request.session['code_verifier'] = code_verifier
-    request.session['state'] = state
+    OAuthState.objects.create(state=state, code_verifier=code_verifier)
+
+    logger.debug(
+        f'Session saved with state: {state} and code_verifier: {code_verifier}')
 
     params = {
         'response_type': 'code',
@@ -55,11 +60,18 @@ def canva_auth(request):
 def canva_callback(request):
     code = request.GET.get('code')
     state = request.GET.get('state')
-    stored_state = request.session.get('state')
-    code_verifier = request.session.get('code_verifier')
 
-    if state != stored_state:
+    try:
+        oauth_state = OAuthState.objects.get(state=state)
+    except OAuthState.DoesNotExist:
         return JsonResponse({'error': 'Invalid state parameter'}, status=400)
+
+    if oauth_state.is_expired():
+        oauth_state.delete()
+        return JsonResponse({'error': 'State parameter expired'}, status=400)
+
+    code_verifier = oauth_state.code_verifier
+    oauth_state.delete()  # Clean up the state record
 
     token_url = 'https://api.canva.com/rest/v1/oauth/token'
     data = {
@@ -96,19 +108,17 @@ def canva_callback(request):
     team_id = team_user.get('team_id', '')
 
     user_profile_url = 'https://api.canva.com/rest/v1/users/me/profile'
-
-    user_profile_response = requests.get(
-        user_profile_url, headers={'Authorization': f"Bearer{access_token}"}
-    )
+    user_profile_response = requests.get(user_profile_url, headers={
+                                         'Authorization': f"Bearer {access_token}"})
 
     if user_profile_response.status_code != 200:
         return JsonResponse({'error': 'Failed to fetch user profile from Canva'}, status=500)
 
-    display_name = user_profile_response.get('display_name', '')
+    display_name = user_profile_response.json().get('display_name', '')
 
     # Create or update user
     user, created = User.objects.update_or_create(
-        user_id=user_id,
+        canva_user_id=user_id,
         defaults={
             'display_name': display_name,
             'team_id': team_id,
@@ -123,4 +133,3 @@ def canva_callback(request):
 
     # Redirect to dashboard or any other page
     return redirect('http://localhost:3000/dashboard')
-

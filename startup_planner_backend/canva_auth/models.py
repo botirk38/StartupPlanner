@@ -17,12 +17,12 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
         return self.create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    user_id = models.CharField(max_length=255, unique=True)
+    canva_user_id = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255, blank=True)
     team_id = models.CharField(max_length=255, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -58,3 +58,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.refresh_token = refresh_token
         self.token_expiry = timezone.now() + timedelta(seconds=expires_in)
         self.save()
+
+
+class OAuthState(models.Model):
+    state = models.CharField(max_length=255, unique=True)
+    code_verifier = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        expiration_time = timezone.now() - timezone.timedelta(minutes=10)
+        return self.created_at < expiration_time
+
