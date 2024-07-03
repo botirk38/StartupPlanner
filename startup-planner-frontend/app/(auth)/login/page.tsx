@@ -52,7 +52,7 @@ export default function LoginPage() {
 
   const handleCanvaLogin = () => {
 
-
+    router.push("http://localhost:8000/api/canva/auth");
 
   };
 
