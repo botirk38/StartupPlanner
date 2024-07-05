@@ -59,6 +59,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.token_expiry = timezone.now() + timedelta(seconds=expires_in)
         self.save()
 
+    def is_first_time_login(self):
+        return self.last_login is None
+
 
 class OAuthState(models.Model):
     state = models.CharField(max_length=255, unique=True)
