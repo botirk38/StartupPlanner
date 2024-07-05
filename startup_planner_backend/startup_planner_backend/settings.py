@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # Add your apps here
-    'canva_auth',  # Example: replace 'myapp' with the actual app name
+    'django.contrib',
+    'canva_auth',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [

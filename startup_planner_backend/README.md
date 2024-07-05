@@ -60,7 +60,7 @@ This is the backend for the StartupPlanner application, built with Django. It pr
 
 ## Environment Variables
 
-Create a `.env` file in the root directory of the project and add the following environment variables:
+Create a `.env` file in the root directory of the Django project and add the following environment variables:
 
 ```env
 DJANGO_SECRET_KEY=your-secret-key
