@@ -8,6 +8,7 @@ import BrushIcon from "../icons/brush-icon";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import SettingsIcon from "../icons/settings-icon";
 
 export default function Sidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function Sidebar() {
 
   return (
     <aside className={`hidden md:flex flex-col border-r bg-background z-50 ${sidebarOpen ? "w-48" : "w-14"} transition-all duration-300`}>
-      <nav className="flex flex-col items-start gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col relative items-start gap-4 px-2 sm:py-5">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -56,6 +57,19 @@ export default function Sidebar() {
               </Link>
             </TooltipTrigger>
             {!sidebarOpen && <TooltipContent side="right">Logo Creator</TooltipContent>}
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild className="absolute top-[40rem]">
+              <Link
+                href="#"
+                className="flex items-center justify-start w-full rounded-lg text-muted-foreground transition-colors hover:text-foreground p-2"
+              >
+                <SettingsIcon className="h-5 w-5" />
+                {sidebarOpen && <span className="ml-2">Settings</span>}
+              </Link>
+            </TooltipTrigger>
+            {!sidebarOpen && <TooltipContent side="right">Settings</TooltipContent>}
           </Tooltip>
         </TooltipProvider>
       </nav>
