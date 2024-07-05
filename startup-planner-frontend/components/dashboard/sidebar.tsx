@@ -18,7 +18,7 @@ export default function Sidebar() {
 
   return (
     <aside className={`hidden md:flex flex-col border-r bg-background z-50 ${sidebarOpen ? "w-48" : "w-14"} transition-all duration-300`}>
-      <nav className="flex flex-col relative items-start gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col items-start gap-4 px-2 sm:py-5">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -60,7 +60,7 @@ export default function Sidebar() {
           </Tooltip>
 
           <Tooltip>
-            <TooltipTrigger asChild className="absolute top-[40rem]">
+            <TooltipTrigger asChild>
               <Link
                 href="#"
                 className="flex items-center justify-start w-full rounded-lg text-muted-foreground transition-colors hover:text-foreground p-2"
