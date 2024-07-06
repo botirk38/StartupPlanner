@@ -64,8 +64,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class OAuthState(models.Model):
-    state = models.CharField(max_length=255, unique=True)
-    code_verifier = models.CharField(max_length=255)
+    state = models.CharField(max_length=1024, unique=True)
+    code_verifier = models.CharField(max_length=1024)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_expired(self):
