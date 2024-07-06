@@ -34,5 +34,5 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Run the application
-CMD exec gunicorn startup_planner_backend.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 3
+CMD ["sh", "-c", "gunicorn startup_planner_backend.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 3"]
 
