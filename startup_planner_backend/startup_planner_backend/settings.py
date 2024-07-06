@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import django_heroku
+
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib',
     'canva_auth',
     'rest_framework',
+    'django.contrib.staticfiles',
+
 
 ]
 
@@ -139,3 +143,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+django_heroku.settings(locals())
