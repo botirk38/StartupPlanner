@@ -17,6 +17,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           driver: docker-container
+          driver-opts: image=moby/buildkit:latest
 
       - name: Cache Docker layers
         uses: actions/cache@v2
@@ -28,7 +29,7 @@ jobs:
 
       - name: Build Docker image
         working-directory: startup_planner_backend
-        run: docker build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --platform linux/amd64 -t botirk/startup_planner_backend .
+        run: docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --platform linux/amd64 -t botirk/startup_planner_backend --load .
 
       - name: Login to Heroku Container Registry
         env:
@@ -39,3 +40,4 @@ jobs:
       - name: Push Docker image to Heroku
         run: |
           docker tag botirk/startup_planner_backend registry.heroku.com/startup-planner/web
+          docker push registry.heroku.com/startup-planner/web
