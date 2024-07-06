@@ -163,7 +163,8 @@ class CanvaCallbackAPIView(APIView):
         )
 
         login(request, user)
-        return redirect('http://localhost:3000/dashboard')
+        dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
+        return redirect(dashboard_url)
 
 
 class ContactUsAPIView(APIView):
@@ -198,4 +199,3 @@ class ContactUsAPIView(APIView):
             return Response({'error': 'Failed to send email'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({'success': 'Email sent successfully'}, status=status.HTTP_200_OK)
-

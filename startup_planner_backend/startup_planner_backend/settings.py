@@ -90,6 +90,9 @@ CANVA_CLIENT_ID = os.getenv("CANVA_CLIENT_ID")
 CANVA_CLIENT_SECRET = os.getenv("CANVA_CLIENT_SECRET")
 CANVA_REDIRECT_URI = os.getenv("CANVA_REDIRECT_URI")
 
+# FRONTEND
+
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # Database
 # https://docs.djangoproject.com/en/3.x/ref/settings/#databases
