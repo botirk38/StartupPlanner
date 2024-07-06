@@ -29,9 +29,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If not authenticated, redirect to the root page
-  const url = request.nextUrl.clone();
-  url.pathname = '/';
-  return NextResponse.redirect(url);
+  return NextResponse.redirect('/');
 }
 
 // Configure the middleware to match specific paths
