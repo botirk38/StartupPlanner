@@ -51,9 +51,17 @@ export default function LoginPage() {
   };
 
   const handleCanvaLogin = () => {
-
-    router.push("http://localhost:8000/api/canva/auth");
-
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const canvaAuthUrl = `${baseUrl}/canva/auth`;
+    if (baseUrl) {
+      router.push(canvaAuthUrl);
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Canva login URL is not configured',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -137,7 +145,6 @@ export default function LoginPage() {
             Login with
             <CanvaIcon />
           </Button>
-
         </div>
       </div>
     </div>
