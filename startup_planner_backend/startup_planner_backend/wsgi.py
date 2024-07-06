@@ -1,16 +1,14 @@
-"""
-WSGI config for startup_planner_backend project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
-"""
-
 import os
-
+import sys
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'startup_planner_backend.settings')
+port = os.getenv('PORT')
+sys.stdout.write(
+    f"Starting WSGI application with settings: {os.getenv('DJANGO_SETTINGS_MODULE')}\n")
+sys.stdout.write(f"Binding to port: {port}\n")
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                      'startup_planner_backend.settings')
 
 application = get_wsgi_application()
+
