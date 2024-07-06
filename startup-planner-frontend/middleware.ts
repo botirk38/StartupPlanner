@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -6,7 +7,8 @@ export async function middleware(request: NextRequest) {
   const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/check-auth`;
 
   // Retrieve the session ID from the cookies
-  const sessionId = request.cookies.get('sessionid');
+  const cookieStore = cookies();
+  const sessionId = cookieStore.get('sessionid');
 
   // If there is no session ID, redirect to the root page
   if (!sessionId) {
