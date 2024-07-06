@@ -51,6 +51,7 @@ export default function LoginPage() {
   };
 
   const handleCanvaLogin = () => {
+    console.log(process.env.NEXT_PUBLIC_API_URL);
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const canvaAuthUrl = `${baseUrl}/canva/auth`;
     if (baseUrl) {
