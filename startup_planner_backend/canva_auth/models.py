@@ -26,8 +26,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     display_name = models.CharField(max_length=255, blank=True)
     team_id = models.CharField(max_length=255, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    access_token = models.CharField(max_length=255, blank=True, null=True)
-    refresh_token = models.CharField(max_length=255, blank=True, null=True)
+    access_token = models.CharField(max_length=1024, blank=True, null=True)
+    refresh_token = models.CharField(max_length=1024, blank=True, null=True)
     token_expiry = models.DateTimeField(blank=True, null=True)
 
     groups = models.ManyToManyField(
@@ -71,4 +71,3 @@ class OAuthState(models.Model):
     def is_expired(self):
         expiration_time = timezone.now() - timezone.timedelta(minutes=10)
         return self.created_at < expiration_time
-
