@@ -1,4 +1,3 @@
-```markdown
 # StartupPlanner Backend
 
 This is the backend for the StartupPlanner application, built with Django. It provides REST APIs for managing the application's data and integrates with Canva for user authentication.
