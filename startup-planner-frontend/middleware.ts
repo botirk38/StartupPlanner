@@ -1,37 +1,46 @@
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Middleware function to check authentication status
 export async function middleware(request: NextRequest) {
-  const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/check-auth`;
+  const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/check-auth/`;
+  console.log("Endpoint: ", apiEndpoint)
 
   // Retrieve the session ID from the cookies
-  const cookieStore = cookies();
-  const sessionId = cookieStore.get('sessionid');
+  const sessionId = request.cookies.get('sessionid');
+  console.log("Session ID: ", sessionId);
 
-  // If there is no session ID, redirect to the root page
   if (!sessionId) {
-    return NextResponse.redirect(new URL('/', request.url));
+    console.log("No sessionId");
+    return NextResponse.redirect(new URL('/', "http://localhost:3000"));
   }
 
-  // Fetch the authentication status from Django API
-  const response = await fetch(apiEndpoint, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Cookie': `sessionid=${sessionId}`
-    }
-  });
+  try {
+    const response = await fetch(apiEndpoint, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `sessionid=${sessionId.value}`
+      }
+    });
 
-  if (response.status === 200) {
+    if (!response.ok) {
+      const error = await response.text();
+      console.log("Error: ", error);
+      return NextResponse.redirect(new URL('/', "http://localhost:3000"));
+
+    }
+
     const data = await response.json();
     if (data.isAuthenticated) {
       return NextResponse.next();
     }
+
+  } catch (err: any) {
+    console.log("Error: ", err);
   }
 
   // If not authenticated, redirect to the root page
-  return NextResponse.redirect('/');
+  return NextResponse.redirect(new URL('/', "http://localhost:3000"));
 }
 
 // Configure the middleware to match specific paths
