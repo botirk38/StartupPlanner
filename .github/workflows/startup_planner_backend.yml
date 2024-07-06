@@ -50,13 +50,13 @@ jobs:
 
       - name: Build Docker image
         working-directory: startup_planner_backend
-        run: docker build -t your-app-name .
+        run: docker build --platform linux/amd64 -t botirk/startup_planner_backend .
 
       - name: Push Docker image to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          docker tag startup-planner registry.heroku.com/startup-planner/web
+          docker tag botirk/startup_planner_backend registry.heroku.com/startup-planner/web
           docker push registry.heroku.com/startup-planner/web
 
       - name: Release Docker image on Heroku
