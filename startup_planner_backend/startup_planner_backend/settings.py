@@ -94,7 +94,7 @@ CANVA_REDIRECT_URI = os.getenv("CANVA_REDIRECT_URI")
 # Database
 # https://docs.djangoproject.com/en/3.x/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', ssl_require=False)
 }
 
 
