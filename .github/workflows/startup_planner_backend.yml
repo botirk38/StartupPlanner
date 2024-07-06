@@ -3,7 +3,7 @@ name: CI/CD Pipeline Startup Planner Backend
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
