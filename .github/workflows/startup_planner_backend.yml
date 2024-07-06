@@ -25,7 +25,7 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db?sslmode=disable
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/test_db"
 
     steps:
       - name: Checkout code
