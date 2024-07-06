@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    canva_user_id = models.CharField(max_length=255, unique=True)
+    canva_user_id = models.CharField(max_length=1024, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255, blank=True)
     team_id = models.CharField(max_length=255, blank=True, null=True)
