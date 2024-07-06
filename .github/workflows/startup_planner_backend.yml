@@ -41,3 +41,9 @@ jobs:
         run: |
           docker tag botirk/startup_planner_backend registry.heroku.com/startup-planner/web
           docker push registry.heroku.com/startup-planner/web
+
+      - name: Release to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:release web --app startup-planner
