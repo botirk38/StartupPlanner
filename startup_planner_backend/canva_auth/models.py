@@ -26,8 +26,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     display_name = models.CharField(max_length=255, blank=True)
     team_id = models.CharField(max_length=255, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    access_token = models.CharField(max_length=1024, blank=True, null=True)
-    refresh_token = models.CharField(max_length=1024, blank=True, null=True)
+    access_token = models.CharField(max_length=2048, blank=True, null=True)
+    refresh_token = models.CharField(max_length=2048, blank=True, null=True)
     token_expiry = models.DateTimeField(blank=True, null=True)
 
     groups = models.ManyToManyField(
@@ -64,8 +64,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class OAuthState(models.Model):
-    state = models.CharField(max_length=1024, unique=True)
-    code_verifier = models.CharField(max_length=1024)
+    state = models.CharField(max_length=2048, unique=True)
+    code_verifier = models.CharField(max_length=2048)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_expired(self):
