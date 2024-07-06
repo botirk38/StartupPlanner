@@ -121,11 +121,7 @@ Below is a list of available API endpoints:
 
 - `GET /api/canva/auth/` - Initiate Canva authentication
 - `GET /api/canva/auth/callback/` - Canva authentication callback
-- `GET /api/users/` - Retrieve list of users
-- `POST /api/users/` - Create a new user
-- `GET /api/users/{id}/` - Retrieve a specific user
-- `PUT /api/users/{id}/` - Update a specific user
-- `DELETE /api/users/{id}/` - Delete a specific user
+- `GET /api/check-auth` - Checks authentication of current user
 
 ## Running Tests
 
@@ -134,8 +130,6 @@ To run tests, use the following command:
 ```bash
 python manage.py test
 ```
-
-
 
 ## License
 
