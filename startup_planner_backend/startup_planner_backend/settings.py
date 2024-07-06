@@ -97,6 +97,12 @@ DATABASES = {
     'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+    if not DEBUG:  # Production environment
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+    else:  # Development or CI environment
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'disable'}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
