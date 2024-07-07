@@ -23,6 +23,27 @@
   --card: 210 100% 98%;
   --ring: 210 50% 40%;
   --radius: 0.5rem;
+  --background-dark: 240 5% 6%;
+  --foreground-dark: 60 5% 90%;
+  --primary-dark: 240 0% 90%;
+  --primary-foreground-dark: 60 0% 0%;
+  --secondary-dark: 240 4% 15%;
+  --secondary-foreground-dark: 60 5% 85%;
+  --accent-dark: 240 0% 13%;
+  --accent-foreground-dark: 60 0% 100%;
+  --destructive-dark: 0 60% 50%;
+  --destructive-foreground-dark: 0 0% 98%;
+  --muted-dark: 240 5% 25%;
+  --muted-foreground-dark: 60 5% 85%;
+  --card-dark: 240 4% 10%;
+  --card-foreground-dark: 60 5% 90%;
+  --popover-dark: 240 5% 15%;
+  --popover-foreground-dark: 60 5% 85%;
+  --border-dark: 240 6% 20%;
+  --input-dark: 240 6% 20%;
+  --ring-dark: 240 5% 90%;
+  --radius-dark: 0.5rem;
+
 }
 
 body {
@@ -30,6 +51,11 @@ body {
   background: linear-gradient(to bottom,
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+body.dark {
+  color: rgb(var(--foreground-dark-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-dark-end-rgb))) rgb(var(--background-dark-start-rgb));
 }
 
 @layer utilities {
