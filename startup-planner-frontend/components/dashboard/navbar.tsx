@@ -5,8 +5,18 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+
 
 function DashboardNav() {
+  const router = useRouter();
+
+  function goToProfile() {
+    router.push("/dashboard/user-profile");
+
+  }
+
   return (
     <header className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between border-b bg-background dark:bg-gray-900 px-4 md:px-6">
       <Link href="#" className="flex items-center gap-2">
@@ -47,7 +57,7 @@ function DashboardNav() {
           <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <DropdownMenuLabel className="text-gray-900 dark:text-gray-100">My Account</DropdownMenuLabel>
             <DropdownMenuSeparator className="border-gray-200 dark:border-gray-700" />
-            <DropdownMenuItem className="text-gray-900 dark:text-gray-100 dark:hover:bg-gray-700">Settings</DropdownMenuItem>
+            <DropdownMenuItem className="text-gray-900 dark:text-gray-100 dark:hover:bg-gray-700" onClick={() => goToProfile()}>Settings</DropdownMenuItem>
             <DropdownMenuItem className="text-gray-900 dark:text-gray-100 dark:hover:bg-gray-700">Support</DropdownMenuItem>
             <DropdownMenuSeparator className="border-gray-200 dark:border-gray-700" />
             <DropdownMenuItem className="text-gray-900 dark:text-gray-100 dark:hover:bg-gray-700">Logout</DropdownMenuItem>
