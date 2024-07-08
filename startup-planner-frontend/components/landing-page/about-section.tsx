@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
-
+import React from "react";
+import Image from "next/image";
 
 const AboutSection: React.FC = () => {
 
@@ -8,7 +9,7 @@ const AboutSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <img
+            <Image
               src="/about-image.webp"
               width={600}
               height={400}

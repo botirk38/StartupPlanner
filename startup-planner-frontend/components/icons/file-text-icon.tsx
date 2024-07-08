@@ -1,4 +1,6 @@
 import { IconProps } from "@/utils/types";
+import React from "react";
+
 
 const FileTextIcon: React.FC<IconProps> = (props) => (
   <svg

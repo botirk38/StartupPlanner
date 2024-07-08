@@ -1,4 +1,5 @@
 import { IconProps } from "@/utils/types";
+import React from "react";
 
 
 function SettingsIcon(props: IconProps) {
