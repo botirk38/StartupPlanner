@@ -1,3 +1,5 @@
+# models.py
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
 from django.utils import timezone
@@ -29,6 +31,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     access_token = models.CharField(max_length=4096, blank=True, null=True)
     refresh_token = models.CharField(max_length=4096, blank=True, null=True)
     token_expiry = models.DateTimeField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
 
     groups = models.ManyToManyField(
         Group,
@@ -71,3 +74,14 @@ class OAuthState(models.Model):
     def is_expired(self):
         expiration_time = timezone.now() - timezone.timedelta(minutes=10)
         return self.created_at < expiration_time
+
+
+class BillingInfo(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name='billing_info')
+    card_number = models.CharField(max_length=16)
+    card_expiry = models.CharField(max_length=5)
+    card_cvc = models.CharField(max_length=3)
+    card_zip = models.CharField(max_length=10)
+    updated_at = models.DateTimeField(auto_now=True)
+
