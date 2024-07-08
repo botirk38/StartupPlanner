@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
+import { AccountData } from "@/utils/types";
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";  // Assuming you have this custom hook set up in your Shadcn components
+import { useToast } from "@/components/ui/use-toast";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, Label } from "@radix-ui/react-dropdown-menu";
 
 // Schema for Account Form
 const accountSchema = z.object({
-  name: z.string().min(2, {
+  display_name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
   email: z.string().email({
@@ -60,15 +62,20 @@ const securitySchema = z.object({
   }),
 });
 
-export function UserProfile() {
+
+interface UserProfileProps {
+  accountData: AccountData;
+}
+
+export function UserProfile({ accountData }: UserProfileProps) {
   const { toast } = useToast();
 
   const accountForm = useForm({
     resolver: zodResolver(accountSchema),
     defaultValues: {
-      name: "Jared Palmer",
-      email: "jared@acme.inc",
-      bio: "I'm a software engineer and designer. I love building products that solve real problems."
+      display_name: accountData.display_name,
+      email: accountData.email,
+      bio: accountData.bio
     },
   });
 
@@ -91,12 +98,41 @@ export function UserProfile() {
     },
   });
 
-  const onSubmitAccount: SubmitHandler<typeof accountSchema._type> = (data) => {
+  const onSubmitAccount: SubmitHandler<typeof accountSchema._type> = async (data) => {
     console.log("Account Data Submitted:", data);
-    toast({
-      title: "Account settings updated",
-      description: "Your account settings have been updated successfully.",
-    });
+
+    try {
+
+      const response = await fetch("/api/account", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        toast({
+          title: "Account settings update failed.",
+          description: errorData,
+        });
+      }
+
+      toast({
+        title: "Account settings updated",
+        description: "Your account settings have been updated successfully.",
+      });
+    }
+    catch (error: any) {
+      toast({
+        title: "Account settings update failed.",
+        description: "Please try again later.",
+      });
+
+      console.log("Error: ", error);
+    }
   };
 
   const onSubmitBilling: SubmitHandler<typeof billingSchema._type> = (data) => {
@@ -119,17 +155,30 @@ export function UserProfile() {
     <div className="flex flex-col min-h-dvh dark:bg-gray-900 dark:text-white">
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b dark:border-gray-700 px-4 sm:static sm:h-auto sm:border-0 sm:px-6">
         <div className="flex items-center gap-4">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src="/placeholder-user.jpg" />
-            <AvatarFallback>JP</AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="h-9 w-9">
+                <AvatarImage src="/placeholder-user.jpg" />
+                <AvatarFallback>JP</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="dark:bg-white dark:text-gray-800 rounded-lg p-1 ml-6 mt-4">
+                <Label>
+                  <span>Upload Avatar</span>
+                </Label>
+                <Input id="avatar-upload" type="file" accept="image/*" className="sr-only" />
+
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="grid gap-0.5">
-            <div className="font-medium">Jared Palmer</div>
-            <div className="text-xs text-muted-foreground dark:text-gray-400">jared@acme.inc</div>
+            <div className="font-medium">{accountData.display_name}</div>
+            <div className="text-xs text-muted-foreground dark:text-gray-400">{accountData.email}</div>
           </div>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 p-3 md:p-8">
         <Tabs defaultValue="account" className="w-full max-w-3xl mx-auto py-8">
           <TabsList className="border-b dark:border-gray-700 dark:bg-gray-700">
             <TabsTrigger value="account" className="dark:text-gray-200 dark:hover:bg-white dark:hover:text-black dark:active:hover:text-white">Account</TabsTrigger>
@@ -147,7 +196,7 @@ export function UserProfile() {
                   <form onSubmit={accountForm.handleSubmit(onSubmitAccount)} className="space-y-8">
                     <FormField
                       control={accountForm.control}
-                      name="name"
+                      name="display_name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Name</FormLabel>

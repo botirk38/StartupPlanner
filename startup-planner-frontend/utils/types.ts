@@ -5,3 +5,9 @@ export interface AvatarProps {
   fallback: string;
 }
 
+
+export type AccountData = {
+  display_name: string,
+  email: string,
+  bio: string
+}

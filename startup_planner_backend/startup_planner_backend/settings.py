@@ -100,6 +100,11 @@ DATABASES = {
     'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
+# CSRF
+
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators

@@ -19,7 +19,9 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import resend
 from urllib.parse import urlencode
-
+from .serializers import AccountSerializer, BillingSerializer, SecuritySerializer
+from .models import BillingInfo
+from vercel_blob import put
 
 # Load environment variables from .env file
 load_dotenv()
@@ -209,3 +211,73 @@ class CheckAuthAPIView(APIView):
             return Response({'isAuthenticated': True})
         else:
             return Response({'isAuthenticated': False}, status=401)
+
+
+class AccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = AccountSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request):
+        user = request.user
+        serializer = AccountSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BillingView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        billing_info, created = BillingInfo.objects.get_or_create(user=user)
+        serializer = BillingSerializer(billing_info)
+        return Response(serializer.data)
+
+    def put(self, request):
+        user = request.user
+        billing_info, created = BillingInfo.objects.get_or_create(user=user)
+        serializer = BillingSerializer(
+            billing_info, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Billing information updated successfully."})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SecurityView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        serializer = SecuritySerializer(
+            data=request.data, context={'request': request})
+        if serializer.is_valid():
+            request.user.set_password(
+                serializer.validated_data['new_password'])
+            request.user.save()
+            return Response({"message": "Security settings updated successfully."})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AvatarUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        file = request.FILES['avatar']
+        blob_url = upload_to_vercel_blob(file)
+        user.avatar = blob_url
+        user.save()
+        return Response({'avatar': blob_url})
+
+    def upload_to_vercel_blob(file):
+
+        response = put(file.name, file, {
+            'access': 'public',
+        })
+        return response['url']
