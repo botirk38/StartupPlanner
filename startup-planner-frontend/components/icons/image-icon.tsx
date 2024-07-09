@@ -1,5 +1,6 @@
-
 import { IconProps } from "@/utils/types";
+import React from "react";
+
 
 const ImageIcon: React.FC<IconProps> = (props) => {
 

@@ -15,14 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from canva_auth.views import CanvaCallbackAPIView, CanvaAuthAPIView, ContactUsAPIView, CheckAuthAPIView
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/canva/auth/', CanvaAuthAPIView.as_view(), name='canva_auth'),
-    path('api/canva/auth/callback/',
-         CanvaCallbackAPIView.as_view(), name='canva_callback'),
-    path('api/contact-us/', ContactUsAPIView.as_view(), name='contact-us'),
-    path('api/check-auth/', CheckAuthAPIView.as_view(), name='check-auth')
+    path('api/v1/', include('canva_auth.urls', namespace='canva_auth')),
 ]
+

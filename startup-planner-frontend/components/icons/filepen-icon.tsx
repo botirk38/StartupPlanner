@@ -1,7 +1,5 @@
 import { IconProps } from "@/utils/types";
-
-
-
+import React from "react";
 
 function FilePenIcon(props: IconProps) {
   return (
