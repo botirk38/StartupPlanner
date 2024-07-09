@@ -1,6 +1,6 @@
 "use client";
 
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import MountainIcon from "../icons/mountain-icon"
 import MenuIcon from "../icons/menu-icon"
@@ -20,6 +20,7 @@ function MobileNav() {
             <span className="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
+        <SheetTitle className="hidden">Navigation</SheetTitle>
         <SheetContent side="left" className="sm:max-w-xs dark:bg-gray-900">
           <nav className="grid gap-6 text-lg font-medium text-gray-900 dark:text-gray-100">
             <Link

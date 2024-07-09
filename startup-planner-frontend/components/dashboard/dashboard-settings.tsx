@@ -57,12 +57,12 @@ function DashboardSettings({ sidebarOpen }: { sidebarOpen: boolean }) {
               Theme
             </Label>
             <Select value={theme} onValueChange={handleThemeChange}>
-              <SelectTrigger className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+              <SelectTrigger aria-label={`Theme: ${theme}`} className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                 <SelectValue>{theme.charAt(0).toUpperCase() + theme.slice(1)}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="light" aria-label="Light">Light</SelectItem>
+                <SelectItem value="dark" aria-label="Dark">Dark</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -71,13 +71,13 @@ function DashboardSettings({ sidebarOpen }: { sidebarOpen: boolean }) {
               Language
             </Label>
             <Select value={language} onValueChange={handleLanguageChange}>
-              <SelectTrigger className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+              <SelectTrigger aria-label={`Language: ${language}`} className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                 <SelectValue>{language === 'en' ? 'English' : language === 'es' ? 'Spanish' : 'French'}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="es">Spanish</SelectItem>
-                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="en" aria-label="English">English</SelectItem>
+                <SelectItem value="es" aria-label="Spanish">Spanish</SelectItem>
+                <SelectItem value="fr" aria-label="French">French</SelectItem>
               </SelectContent>
             </Select>
           </div>

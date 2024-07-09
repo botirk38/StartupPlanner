@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function PUT(request: NextRequest) {
-  const accountData = await request.json();
+  const accountData = await request.formData();
   const cookieStore = cookies();
   const SESSION_ID = cookieStore.get('sessionid');
   const CSRF_TOKEN = cookieStore.get('csrftoken');
@@ -18,13 +18,12 @@ export async function PUT(request: NextRequest) {
     const response = await fetch(`http://127.0.0.1:8000/api/v1/account/`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'X-CSRFToken': CSRF_TOKEN.value,
         'Referer': 'http://127.0.0.1:8000',
         'Cookie': `sessionid=${SESSION_ID.value}; csrftoken=${CSRF_TOKEN.value}`,
 
       },
-      body: JSON.stringify(accountData)
+      body: accountData
     });
 
     console.log("Backend Response Status:", response.status);

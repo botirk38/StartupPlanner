@@ -109,6 +109,8 @@ describe('ContactPage', () => {
       );
     });
 
+    // Check for error message or any other UI update indicating failure
+    // Example: expect(screen.getByText(/error/i)).toBeInTheDocument();
   });
 });
 

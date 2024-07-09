@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import Sidebar from "@/components/dashboard/sidebar";
 import "../globals.css";
 import MobileNav from "@/components/dashboard/mobile-nav";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   title: 'Next.js',
@@ -48,6 +49,7 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+        <Toaster />
       </body>
     </html>
   );

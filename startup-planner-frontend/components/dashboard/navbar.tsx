@@ -18,14 +18,14 @@ function DashboardNav() {
   }
 
   return (
-    <header className="hidden md:flex sticky top-0 z-30 h-14 items-center justify-between border-b bg-background dark:bg-gray-900 px-4 md:px-6">
-      <Link href="#" className="flex items-center gap-2">
+    <header className="hidden md:flex  z-30 h-14 items-center justify-between border-b bg-background dark:bg-gray-900 px-4 md:px-6">
+      <Link href="/dashboard" className="flex items-center gap-2">
         <MountainIcon className="h-6 w-6 dark:text-gray-100" />
         <span className="text-lg font-semibold dark:text-gray-100">BizPlanner</span>
       </Link>
       <nav className="flex items-center gap-4 dark:text-gray-100">
         <Link
-          href="#"
+          href="/dashboard"
           className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground dark:hover:bg-gray-700 dark:text-gray-100"
         >
           Business Plan Creator
@@ -44,7 +44,7 @@ function DashboardNav() {
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
+            <Button variant="outline" size="icon" className="overflow-hidden rounded-full" name="avatar">
               <Image
                 src="/avatar-1.jpg"
                 width={36}
