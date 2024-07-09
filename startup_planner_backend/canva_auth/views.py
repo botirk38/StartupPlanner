@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from django.conf import settings
 from django.shortcuts import redirect
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -21,7 +21,7 @@ import resend
 from urllib.parse import urlencode
 from .serializers import AccountSerializer, BillingSerializer, SecuritySerializer
 from .models import BillingInfo
-from vercel_blob import put
+from .utils import upload_to_vercel_blob
 
 # Load environment variables from .env file
 load_dotenv()
@@ -43,6 +43,9 @@ class CanvaAuthAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
+        """
+        Initiates the OAuth flow with Canva by redirecting to Canva's authorization URL.
+        """
         code_verifier = self.generate_code_verifier()
         code_challenge = self.generate_code_challenge(code_verifier)
         state = self.generate_state()
@@ -66,16 +69,25 @@ class CanvaAuthAPIView(APIView):
 
     @staticmethod
     def generate_code_verifier() -> str:
+        """
+        Generates a secure random string for the code verifier.
+        """
         return base64.urlsafe_b64encode(os.urandom(32)).decode('utf-8').rstrip('=')
 
     @staticmethod
     def generate_code_challenge(code_verifier: str) -> str:
+        """
+        Generates a code challenge based on the code verifier.
+        """
         code_challenge_digest = hashlib.sha256(
             code_verifier.encode('utf-8')).digest()
         return base64.urlsafe_b64encode(code_challenge_digest).decode('utf-8').rstrip('=')
 
     @staticmethod
     def generate_state() -> str:
+        """
+        Generates a secure random string for the state parameter.
+        """
         return base64.urlsafe_b64encode(os.urandom(16)).decode('utf-8').rstrip('=')
 
 
@@ -87,6 +99,10 @@ class CanvaCallbackAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
+        """
+        Handles the GET request from Canva with the authorization code and state.
+        Exchanges the authorization code for access and refresh tokens.
+        """
         code = request.GET.get('code')
         state = request.GET.get('state')
 
@@ -169,6 +185,20 @@ class CanvaCallbackAPIView(APIView):
         return redirect(dashboard_url)
 
 
+class LogoutAPIView(APIView):
+    """
+    Handles logout functionality.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Logs out the authenticated user.
+        """
+        logout(request)
+        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+
+
 class ContactUsAPIView(APIView):
     """
     Handles contact us form submissions.
@@ -176,6 +206,10 @@ class ContactUsAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        """
+        Handles the POST request for the contact us form.
+        Sends an email with the submitted details.
+        """
         name = request.data.get('name')
         email = request.data.get('email')
         message = request.data.get('message')
@@ -204,25 +238,58 @@ class ContactUsAPIView(APIView):
 
 
 class CheckAuthAPIView(APIView):
+    """
+    Checks if the user is authenticated.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        """
+        Returns authentication status of the user.
+        """
         if request.user.is_authenticated:
             return Response({'isAuthenticated': True})
         else:
-            return Response({'isAuthenticated': False}, status=401)
+            return Response({'isAuthenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class AccountView(APIView):
+    """
+    Handles account-related operations.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        """
+        Retrieves the authenticated user's account details.
+        """
         user = request.user
         serializer = AccountSerializer(user)
+        data = serializer.data
+        data._mutable = True
+        data['is_first_time_login'] = user.is_first_time_login()
+        data._mutable = False
+
         return Response(serializer.data)
 
     def put(self, request):
+        """
+        Updates the authenticated user's account details.
+        Handles avatar upload to Vercel blob storage.
+        """
         user = request.user
+        file = request.FILES.get('avatar')
+
+        if file:
+            try:
+                blob_url = upload_to_vercel_blob(file)
+                request.data._mutable = True
+                request.data['avatar'] = blob_url
+                request.data._mutable = False
+            except Exception as e:
+                logger.error(f'Failed to upload avatar: {e}')
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = AccountSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -231,15 +298,24 @@ class AccountView(APIView):
 
 
 class BillingView(APIView):
+    """
+    Handles billing information operations.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        """
+        Retrieves the authenticated user's billing information.
+        """
         user = request.user
         billing_info, created = BillingInfo.objects.get_or_create(user=user)
         serializer = BillingSerializer(billing_info)
         return Response(serializer.data)
 
     def put(self, request):
+        """
+        Updates the authenticated user's billing information.
+        """
         user = request.user
         billing_info, created = BillingInfo.objects.get_or_create(user=user)
         serializer = BillingSerializer(
@@ -251,9 +327,15 @@ class BillingView(APIView):
 
 
 class SecurityView(APIView):
+    """
+    Handles security-related operations such as password changes.
+    """
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
+        """
+        Updates the authenticated user's password.
+        """
         serializer = SecuritySerializer(
             data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -263,21 +345,3 @@ class SecurityView(APIView):
             return Response({"message": "Security settings updated successfully."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class AvatarUploadView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        file = request.FILES['avatar']
-        blob_url = upload_to_vercel_blob(file)
-        user.avatar = blob_url
-        user.save()
-        return Response({'avatar': blob_url})
-
-    def upload_to_vercel_blob(file):
-
-        response = put(file.name, file, {
-            'access': 'public',
-        })
-        return response['url']

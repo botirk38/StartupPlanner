@@ -13,4 +13,3 @@ urlpatterns = [
     path('billing/', BillingView.as_view(), name='billing'),
     path('security/', SecurityView.as_view(), name='security'),
 ]
-
