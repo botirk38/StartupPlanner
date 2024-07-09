@@ -5,9 +5,10 @@ botocore==1.31.85
 cement==2.8.2
 certifi==2024.7.4
 charset-normalizer==3.3.2
+click==8.1.7
 colorama==0.4.3
 dj-database-url==2.2.0
-Django==5.0.6
+Django==5.0.7
 django-heroku==0.3.1
 djangorestframework==3.15.2
 gunicorn==22.0.0
@@ -25,9 +26,12 @@ semantic-version==2.8.5
 setuptools==70.2.0
 six==1.16.0
 sqlparse==0.5.0
+tabulate==0.9.0
 termcolor==1.1.0
 typing_extensions==4.12.2
 urllib3==1.26.19
+vercel_blob==0.2.5
+vercel_storage==0.0.1
 wcwidth==0.1.9
 wheel==0.43.0
 whitenoise==6.7.0
