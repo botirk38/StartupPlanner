@@ -40,7 +40,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // If not authenticated, redirect to the root page
-  return NextResponse.redirect(new URL('/', request.url));
+  // return NextResponse.redirect(new URL('/', request.url));
+
+  return NextResponse.next();
 }
 
 // Configure the middleware to match specific paths

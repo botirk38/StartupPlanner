@@ -182,8 +182,6 @@ class CanvaCallbackAPIView(APIView):
 
         login(request, user)
         dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
-        print("CSRF Token:", request.COOKIES.get('csrftoken'))
-        print("Session ID:", request.COOKIES.get('sessionid'))
         return redirect(dashboard_url)
 
 
