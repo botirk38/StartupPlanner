@@ -63,7 +63,7 @@ ROOT_URLCONF = 'startup_planner_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Specify your template directory
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,31 +93,33 @@ FRONTEND_URL = os.getenv("FRONTEND_URL")
 # Database
 # https://docs.djangoproject.com/en/3.x/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
 # CSRF
 
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    "CSRF_TRUSTED_ORIGINS", "https://startup-planner.vercel.app").split(',')
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS", "https://startup-planner.vercel.app").split(',')
-CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
-CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type', 'X-CSRFToken']
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CORS_ALLOW_CREDENTIALS = os.getenv(
+    'CORS_ALLOW_CREDENTIALS', 'True').lower() in ('true', '1', 'yes')
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CORS_ALLOW_METHODS = os.getenv(
+    'CORS_ALLOW_METHODS', 'GET,POST,PUT,PATCH,DELETE,OPTIONS').split(',')
+CORS_ALLOW_HEADERS = os.getenv(
+    'CORS_ALLOW_HEADERS', 'Authorization,Content-Type,X-CSRFToken,Set-Cookie').split(',')
 
 # Cookies
 
 SESSION_COOKIE_SECURE = os.getenv(
-    "SESSION_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
+    'SESSION_COOKIE_SECURE', 'False').lower() in ('true', '1', 'yes')
 SESSION_COOKIE_HTTPONLY = os.getenv(
-    "SESSION_COOKIE_HTTPONLY", "True").lower() in ("true", "1", "yes")
-SESSION_COOKIE_SAMESITE = "None"
+    'SESSION_COOKIE_HTTPONLY', 'True').lower() in ('true', '1', 'yes')
+SESSION_COOKIE_SAMESITE = os.getenv('SESSION_COOKIE_SAMESITE', 'Lax')
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', '')
 
 CSRF_COOKIE_SECURE = os.getenv(
-    "CSRF_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
-CSRF_COOKIE_SAMESITE = "None"
+    'CSRF_COOKIE_SECURE', 'False').lower() in ('true', '1', 'yes')
+CSRF_COOKIE_SAMESITE = os.getenv('CSRF_COOKIE_SAMESITE', 'Lax')
+CSRF_COOKIE_DOMAIN = os.getenv('CSRF_COOKIE_DOMAIN', '')
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
@@ -162,3 +164,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
+
