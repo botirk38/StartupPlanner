@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
 
@@ -50,12 +50,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Ensure CORS middleware comes before CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'startup_planner_backend.urls'
@@ -99,25 +100,25 @@ DATABASES = {
 # CSRF
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
-    "CSRF_TRUSTED_ORIGINS", "http://localhost:3000").split(',')
+    "CSRF_TRUSTED_ORIGINS", "https://startup-planner.vercel.app").split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(',')
+    "CORS_ALLOWED_ORIGINS", "https://startup-planner.vercel.app").split(',')
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type', 'X-CSRFToken']
 
 # Cookies
 
 SESSION_COOKIE_SECURE = os.getenv(
-    "SESSION_COOKIE_SECURE", "False").lower() in ("true", "1", "yes")
+    "SESSION_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
 SESSION_COOKIE_HTTPONLY = os.getenv(
     "SESSION_COOKIE_HTTPONLY", "True").lower() in ("true", "1", "yes")
-SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
+SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "None")
 
 CSRF_COOKIE_SECURE = os.getenv(
-    "CSRF_COOKIE_SECURE", "False").lower() in ("true", "1", "yes")
-CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", "Lax")
+    "CSRF_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
+CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", "None")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
