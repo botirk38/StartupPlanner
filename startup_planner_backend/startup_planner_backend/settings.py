@@ -113,11 +113,12 @@ SESSION_COOKIE_SECURE = os.getenv(
     "SESSION_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
 SESSION_COOKIE_HTTPONLY = os.getenv(
     "SESSION_COOKIE_HTTPONLY", "True").lower() in ("true", "1", "yes")
-SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "None")
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", "")
 
 CSRF_COOKIE_SECURE = os.getenv(
     "CSRF_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
-CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", "None")
+CSRF_COOKIE_SAMESITE = "None"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
