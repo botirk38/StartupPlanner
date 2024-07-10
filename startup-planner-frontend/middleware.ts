@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   if (!sessionId) {
     console.log("No sessionId");
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.next();
   }
 
   try {
@@ -40,9 +40,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If not authenticated, redirect to the root page
-  // return NextResponse.redirect(new URL('/', request.url));
-
-  return NextResponse.next();
+  return NextResponse.redirect(new URL('/', request.url));
 }
 
 // Configure the middleware to match specific paths
