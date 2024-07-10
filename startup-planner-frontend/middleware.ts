@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   if (!sessionId) {
     console.log("No sessionId");
-    return NextResponse.next();
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   try {
