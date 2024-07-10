@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   if (!sessionId) {
     console.log("No sessionId");
-    return NextResponse.redirect(new URL('/', "http://localhost:3000"));
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   try {
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
     if (!response.ok) {
       const error = await response.text();
       console.log("Error: ", error);
-      return NextResponse.redirect(new URL('/', "http://localhost:3000"));
+      return NextResponse.redirect(new URL('/', request.url));
 
     }
 
@@ -40,7 +40,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If not authenticated, redirect to the root page
-  return NextResponse.redirect(new URL('/', "http://localhost:3000"));
+  return NextResponse.redirect(new URL('/', request.url));
 }
 
 // Configure the middleware to match specific paths

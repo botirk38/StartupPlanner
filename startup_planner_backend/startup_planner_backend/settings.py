@@ -102,9 +102,11 @@ DATABASES = {
 
 # CSRF
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000",
+                        "https://startup-planner.vercel.app"]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
+CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000",
+                        "https://startup-planner.vercel.app"]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
