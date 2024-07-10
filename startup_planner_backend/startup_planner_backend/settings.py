@@ -117,6 +117,7 @@ SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
 
 # Set to True if using HTTPS
 CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", False)
+CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", "Lax")
 
 
 # Password validation
