@@ -119,6 +119,7 @@ SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", "")
 CSRF_COOKIE_SECURE = os.getenv(
     "CSRF_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
 CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", "")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
