@@ -22,7 +22,7 @@ from urllib.parse import urlencode
 from .serializers import AccountSerializer, BillingSerializer, SecuritySerializer
 from .models import BillingInfo
 from .utils import upload_to_vercel_blob
-
+from django.http import HttpResponseRedirect
 # Load environment variables from .env file
 load_dotenv()
 
@@ -182,7 +182,26 @@ class CanvaCallbackAPIView(APIView):
 
         login(request, user)
         dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
-        return redirect(dashboard_url)
+
+        response = HttpResponseRedirect(dashboard_url)
+        session_id = request.COOKIES.get('sessionid')
+        csrf_token = request.COOKIES.get('csrftoken')
+
+        response.set_cookie(
+            'sessionid', session_id,
+            domain=settings.SESSION_COOKIE_DOMAIN,
+            samesite='None',
+            secure=True,
+            httponly=True
+        )
+        response.set_cookie(
+            'csrftoken',
+            csrf_token,
+            domain=settings.CSRF_COOKIE_DOMAIN,
+            samesite='None',
+            secure=True
+        )
+        return response
 
 
 class LogoutAPIView(APIView):
