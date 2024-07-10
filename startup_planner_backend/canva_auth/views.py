@@ -182,6 +182,8 @@ class CanvaCallbackAPIView(APIView):
 
         login(request, user)
         dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
+        print("CSRF Token:", request.COOKIES.get('csrftoken'))
+        print("Session ID:", request.COOKIES.get('sessionid'))
         return redirect(dashboard_url)
 
 
@@ -344,4 +346,3 @@ class SecurityView(APIView):
             request.user.save()
             return Response({"message": "Security settings updated successfully."})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
