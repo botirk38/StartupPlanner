@@ -31,7 +31,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = os.getenv(
+    'DJANGO_ALLOWED_HOSTS', 'startup-planner-45de927e241c.herokuapp.com').split(',')
 
 # Application definition
 
@@ -98,28 +99,22 @@ DATABASES = {
 
 # CSRF
 
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    "CSRF_TRUSTED_ORIGINS", "https://startup-planner.vercel.app").split(',')
-
+CSRF_TRUSTED_ORIGINS = ["https://startup-planner.vercel.app"]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS", "https://startup-planner.vercel.app").split(',')
+CORS_ALLOWED_ORIGINS = ["https://startup-planner.vercel.app"]
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type', 'X-CSRFToken']
 
 # Cookies
 
-SESSION_COOKIE_SECURE = os.getenv(
-    "SESSION_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
-SESSION_COOKIE_HTTPONLY = os.getenv(
-    "SESSION_COOKIE_HTTPONLY", "True").lower() in ("true", "1", "yes")
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_DOMAIN = os.getenv("SESSION_COOKIE_DOMAIN", "")
+SESSION_COOKIE_DOMAIN = ".vercel.app"
 
-CSRF_COOKIE_SECURE = os.getenv(
-    "CSRF_COOKIE_SECURE", "True").lower() in ("true", "1", "yes")
+CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", "")
+CSRF_COOKIE_DOMAIN = ".vercel.app"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.x/ref/settings/#auth-password-validators
