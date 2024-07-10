@@ -92,8 +92,9 @@ FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # Database
 # https://docs.djangoproject.com/en/3.x/ref/settings/#databases
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config(default=f"sqlite:///{BASE_DIR}/db.sqlite3")
 }
 
 # CSRF
@@ -101,7 +102,8 @@ DATABASES = {
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 CORS_ALLOW_CREDENTIALS = os.getenv(
     'CORS_ALLOW_CREDENTIALS', 'True').lower() in ('true', '1', 'yes')
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = os.getenv(
+    'CORS_ALLOWED_ORIGINS', 'http://127.0.0.1:3000').split(',')
 CORS_ALLOW_METHODS = os.getenv(
     'CORS_ALLOW_METHODS', 'GET,POST,PUT,PATCH,DELETE,OPTIONS').split(',')
 CORS_ALLOW_HEADERS = os.getenv(
