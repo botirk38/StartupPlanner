@@ -23,46 +23,61 @@ import { useRouter } from 'next/navigation';
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
+const formFields = [
+  { name: 'email', label: 'Email address', type: 'email', placeholder: 'you@example.com' },
+  { name: 'password', label: 'Password', type: 'password', placeholder: 'Password' },
+] as const;
+
 export default function LoginPage() {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: '',
       password: '',
+      rememberMe: false,
     },
   });
 
-  const { toast } = useToast();
-  const router = useRouter();
-
-  const onSubmit = (values: LoginFormValues) => {
-    // Handle form submission, e.g., call API
-    toast({
-      title: 'Success',
-      description: 'You are now signed in!',
-      variant: 'default',
-    });
-    // Reset form fields if needed
-    form.reset();
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      // Handle form submission, e.g., call API
+      console.log('Form values:', values);
+      toast({
+        title: 'Success',
+        description: 'You are now signed in!',
+        variant: 'default',
+      });
+      form.reset();
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to sign in. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleCanvaLogin = () => {
-    console.log(process.env.NEXT_PUBLIC_API_URL);
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-    const canvaAuthUrl = `${baseUrl}/canva/auth`;
-    if (baseUrl) {
-      router.push(canvaAuthUrl);
-    } else {
+    if (!baseUrl) {
       toast({
         title: 'Error',
         description: 'Canva login URL is not configured',
         variant: 'destructive',
       });
+      return;
     }
+    const canvaAuthUrl = `${baseUrl}/canva/auth`;
+    router.push(canvaAuthUrl);
   };
 
   return (
@@ -74,60 +89,54 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{' '}
-            <Link href="#" className="font-medium text-primary hover:text-primary/90" prefetch={false}>
+            <Link href="#" className="font-medium text-primary hover:text-primary/90">
               Register
             </Link>
           </p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email address</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {formFields.map((field) => (
+              <FormField
+                key={field.name}
+                control={form.control}
+                name={field.name}
+                render={({ field: fieldProps }) => (
+                  <FormItem>
+                    <FormLabel>{field.label}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        {...fieldProps}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Checkbox
-                  id="remember-me"
-                  name="remember-me"
-                  className="h-4 w-4 rounded text-primary focus:ring-primary"
-                />
-                <FormLabel htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground">
-                  Remember me
-                </FormLabel>
-              </div>
+              <FormField
+                control={form.control}
+                name="rememberMe"
+                render={({ field }) => (
+                  <FormItem className="flex items-center">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="h-4 w-4 rounded text-primary focus:ring-primary"
+                      />
+                    </FormControl>
+                    <FormLabel htmlFor="rememberMe" className="ml-2 block text-sm text-muted-foreground">
+                      Remember me
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
               <div className="text-sm">
-                <Link href="#" className="font-medium text-primary hover:text-primary/90" prefetch={false}>
+                <Link href="#" className="font-medium text-primary hover:text-primary/90">
                   Forgot your password?
                 </Link>
               </div>
@@ -142,7 +151,7 @@ export default function LoginPage() {
         </Form>
 
         <div>
-          <Button className='gap-2' onClick={handleCanvaLogin}>
+          <Button className='w-full gap-2' onClick={handleCanvaLogin}>
             Login with
             <CanvaIcon />
           </Button>

@@ -23,7 +23,14 @@ const contactFormSchema = z.object({
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
+const formFields = [
+  { name: 'name', label: 'Name', type: 'text', placeholder: 'Enter your name' },
+  { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email' },
+  { name: 'message', label: 'Message', type: 'textarea', placeholder: 'Enter your message' },
+] as const;
+
 export default function ContactPage() {
+  const { toast } = useToast();
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -32,8 +39,6 @@ export default function ContactPage() {
       message: '',
     },
   });
-
-  const { toast } = useToast();
 
   const onSubmit = async (values: ContactFormValues) => {
     try {
@@ -45,17 +50,18 @@ export default function ContactPage() {
         body: JSON.stringify(values),
       });
 
-      if (response.ok) {
-        toast({
-          title: 'Success',
-          description: 'Message sent successfully!',
-          variant: 'default',
-        });
-        form.reset();
-      } else {
+      if (!response.ok) {
         throw new Error('Failed to send message');
       }
+
+      toast({
+        title: 'Success',
+        description: 'Message sent successfully!',
+        variant: 'default',
+      });
+      form.reset();
     } catch (error) {
+      console.error('Error sending message:', error);
       toast({
         title: 'Error',
         description: 'Failed to send the message. Please try again later.',
@@ -76,45 +82,34 @@ export default function ContactPage() {
         <div className="mx-auto w-full max-w-md">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Enter your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Message</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Enter your message" {...field} className="min-h-[150px]" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {formFields.map((field) => (
+                <FormField
+                  key={field.name}
+                  control={form.control}
+                  name={field.name}
+                  render={({ field: fieldProps }) => (
+                    <FormItem>
+                      <FormLabel>{field.label}</FormLabel>
+                      <FormControl>
+                        {field.type === 'textarea' ? (
+                          <Textarea
+                            placeholder={field.placeholder}
+                            {...fieldProps}
+                            className="min-h-[150px]"
+                          />
+                        ) : (
+                          <Input
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            {...fieldProps}
+                          />
+                        )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
               <Button type="submit" className="w-full">
                 Submit
               </Button>

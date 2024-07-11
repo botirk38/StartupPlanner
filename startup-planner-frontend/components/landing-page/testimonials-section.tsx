@@ -2,6 +2,65 @@ import React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import QuoteIcon from '../icons/quote-icon';
 
+interface Testimonial {
+  quote: string;
+  author: {
+    name: string;
+    role: string;
+    avatarSrc: string;
+    avatarFallback: string;
+  };
+}
+
+const testimonials: Testimonial[] = [
+  {
+    quote: "Canva Startup Planner has been a game-changer for my business. The Business Plan Generator helped me create a professional and comprehensive plan in no time.",
+    author: {
+      name: "Jane Doe",
+      role: "Founder, Acme Inc.",
+      avatarSrc: "/placeholder-user.jpg",
+      avatarFallback: "JD",
+    },
+  },
+  {
+    quote: "The Copywriting Tool has been a lifesaver for my marketing efforts. It helps me create compelling copy that resonates with my target audience.",
+    author: {
+      name: "John Smith",
+      role: "Co-founder, Startup Co.",
+      avatarSrc: "/placeholder-user.jpg",
+      avatarFallback: "JS",
+    },
+  },
+  {
+    quote: "The Logo and Branding Generator has been a game-changer for my business. It helped me create a professional and memorable brand identity.",
+    author: {
+      name: "Sarah Lee",
+      role: "Founder, Startup Boutique",
+      avatarSrc: "/placeholder-user.jpg",
+      avatarFallback: "SL",
+    },
+  },
+];
+
+const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }) => (
+  <div className="bg-muted rounded-lg shadow-md p-6">
+    <div className="mb-4">
+      <QuoteIcon className="w-8 h-8 text-primary" />
+    </div>
+    <p className="text-foreground mb-4">"{testimonial.quote}"</p>
+    <div className="flex items-center">
+      <Avatar>
+        <AvatarImage src={testimonial.author.avatarSrc} alt={testimonial.author.name} />
+        <AvatarFallback>{testimonial.author.avatarFallback}</AvatarFallback>
+      </Avatar>
+      <div className="ml-4">
+        <h4 className="text-lg font-semibold text-foreground">{testimonial.author.name}</h4>
+        <p className="text-muted-foreground">{testimonial.author.role}</p>
+      </div>
+    </div>
+  </div>
+);
+
 const TestimonialsSection: React.FC = () => (
   <section className="bg-background py-16 lg:py-24">
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,63 +71,9 @@ const TestimonialsSection: React.FC = () => (
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div className="bg-muted rounded-lg shadow-md p-6">
-          <div className="mb-4">
-            <QuoteIcon className="w-8 h-8 text-primary" />
-          </div>
-          <p className="text-foreground mb-4">
-            &quot;Canva Startup Planner has been a game-changer for my business. The Business Plan Generator helped me
-            create a professional and comprehensive plan in no time.&quot;
-          </p>
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="ml-4">
-              <h4 className="text-lg font-semibold text-foreground">Jane Doe</h4>
-              <p className="text-muted-foreground">Founder, Acme Inc.</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-muted rounded-lg shadow-md p-6">
-          <div className="mb-4">
-            <QuoteIcon className="w-8 h-8 text-primary" />
-          </div>
-          <p className="text-foreground mb-4">
-            &quot;The Copywriting Tool has been a lifesaver for my marketing efforts. It helps me create compelling copy
-            that resonates with my target audience.&quot;
-          </p>
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>JS</AvatarFallback>
-            </Avatar>
-            <div className="ml-4">
-              <h4 className="text-lg font-semibold text-foreground">John Smith</h4>
-              <p className="text-muted-foreground">Co-founder, Startup Co.</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-muted rounded-lg shadow-md p-6">
-          <div className="mb-4">
-            <QuoteIcon className="w-8 h-8 text-primary" />
-          </div>
-          <p className="text-foreground mb-4">
-            &quot;The Logo and Branding Generator has been a game-changer for my business. It helped me create a
-            professional and memorable brand identity.&quot;
-          </p>
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="/placeholder-user.jpg" />
-              <AvatarFallback>SL</AvatarFallback>
-            </Avatar>
-            <div className="ml-4">
-              <h4 className="text-lg font-semibold text-foreground">Sarah Lee</h4>
-              <p className="text-muted-foreground">Founder, Startup Boutique</p>
-            </div>
-          </div>
-        </div>
+        {testimonials.map((testimonial, index) => (
+          <TestimonialCard key={index} testimonial={testimonial} />
+        ))}
       </div>
     </div>
   </section>

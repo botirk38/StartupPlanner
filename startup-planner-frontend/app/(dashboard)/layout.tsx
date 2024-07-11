@@ -4,7 +4,7 @@ import { Syne } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import Sidebar from "@/components/dashboard/sidebar";
 import "../globals.css";
-import MobileNav from "@/components/dashboard/mobile-nav";
+import MobileNavDashboard from "@/components/dashboard/mobile-nav-dashboard";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
@@ -24,11 +24,16 @@ const fontBody = Syne({
   variable: '--font-body',
 });
 
-export default function RootLayout({
+import { getAccountData } from "@/utils/functions";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const accountData = await getAccountData();
+
 
   return (
     <html lang="en">
@@ -40,8 +45,8 @@ export default function RootLayout({
         )}
       >
         <div className="flex min-h-screen w-full flex-col bg-muted/40 dark:bg-gray-900">
-          <DashboardNav />
-          <MobileNav />
+          <DashboardNav accountData={accountData} />
+          <MobileNavDashboard accountData={accountData} />
           <div className="flex flex-1 overflow-hidden">
             <Sidebar />
             <div className="flex flex-1 flex-col p-4">

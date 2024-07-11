@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import '../globals.css'
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/landing-page/navbar";
+import MobileNav from "@/components/landing-page/mobile-nav";
 
 const fontHeading = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -38,6 +39,7 @@ export default function RootLayout({
         )}
       >
         <Navbar />
+        <MobileNav />
 
 
         {children}
