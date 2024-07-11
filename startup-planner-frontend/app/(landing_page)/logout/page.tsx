@@ -16,7 +16,7 @@ export default function LogoutPage() {
       >
         <LogOutIcon className="mx-auto h-12 w-12 text-primary" />
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          You've been logged out
+          You&apos; ve been logged out
         </h1>
         <p className="mt-4 text-muted-foreground">
           Thank you for using our application. Click the button below to return to the login page.

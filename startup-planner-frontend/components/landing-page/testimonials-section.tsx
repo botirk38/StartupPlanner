@@ -47,7 +47,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
     <div className="mb-4">
       <QuoteIcon className="w-8 h-8 text-primary" />
     </div>
-    <p className="text-foreground mb-4">"{testimonial.quote}"</p>
+    <p className="text-foreground mb-4">&ldquo;{testimonial.quote}&ldquo;</p>
     <div className="flex items-center">
       <Avatar>
         <AvatarImage src={testimonial.author.avatarSrc} alt={testimonial.author.name} />
