@@ -92,10 +92,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         return self.last_login is None
 
-    def has_password_set(self):
-
-        return self.has_usable_password()
-
 
 class OAuthState(models.Model):
     """
@@ -172,4 +168,3 @@ class BillingInfo(models.Model):
         """
         self.card_number = card_number
         self.save()
-

@@ -70,6 +70,8 @@ CANVA_CLIENT_SECRET=your-canva-client-secret
 CANVA_REDIRECT_URI=your-canva-redirect-uri
 RESEND_API_KEY=your-resend-api-key
 DATABASE_URL=your-database-url 
+BLOB_READ_WRITE_TOKEN=abc
+
 ```
 
 ## Usage
@@ -119,9 +121,13 @@ DATABASE_URL=your-database-url
 
 Below is a list of available API endpoints:
 
-- `GET /api/canva/auth/` - Initiate Canva authentication
-- `GET /api/canva/auth/callback/` - Canva authentication callback
-- `GET /api/check-auth` - Checks authentication of current user
+- `GET /api/v1/canva/auth/` - Initiate Canva authentication
+- `GET /api/v1/canva/auth/callback/` - Canva authentication callback
+- `GET /api/v1/check-auth.` - Checks authentication of current user
+- `POST /api/v1/contact-us/` - Landing page contact endpoint
+- `GET/PUT /api/v1/account/` - Account details of user
+- `GET/PUT /api/v1/billing/` - Billing details of user
+- `GET/PUT /api/v1/security` - Security details of user
 
 ## Running Tests
 
