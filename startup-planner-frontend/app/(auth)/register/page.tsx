@@ -18,90 +18,97 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
 import CanvaIcon from '@/components/icons/canva-icon';
-import { useRouter } from 'next/navigation';
 import { handleCanvaLogin } from '@/utils/client-functions';
+import { useRouter } from 'next/navigation';
 
-const loginFormSchema = z.object({
+const RegisterFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  confirm_password: z.string(),
+  display_name: z.string().min(4, "Display name must be at least 4 characters."),
   rememberMe: z.boolean().optional(),
+}).refine((data) => data.password === data.confirm_password, {
+  message: "Passwords don't match",
+  path: ["confirm_password"],
 });
 
-type LoginFormValues = z.infer<typeof loginFormSchema>;
+type RegisterFormValues = z.infer<typeof RegisterFormSchema>;
 
 const formFields = [
   { name: 'email', label: 'Email address', type: 'email', placeholder: 'you@example.com' },
   { name: 'password', label: 'Password', type: 'password', placeholder: 'Password' },
+  { name: 'confirm_password', label: 'Confirm Password', type: 'password', placeholder: 'Confirm Password' },
+  { name: 'display_name', label: 'Display Name', type: 'text', placeholder: 'Your Name' }
 ] as const;
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirm_password: '',
+      display_name: '',
       rememberMe: false,
     },
   });
 
-  const onSubmit = async (user_data: LoginFormValues) => {
+  const onSubmit = async (user_data: RegisterFormValues) => {
     try {
       console.log('Form values:', user_data);
 
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/register", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
 
         },
         body: JSON.stringify(user_data)
-
       })
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log("Error logging in: ", errorData);
+        console.log("Error registering: ", errorData);
         toast({
-          title: 'Failed to login.',
-          description: errorData.error,
-          variant: 'default',
+          title: 'Failure registering',
+          description: 'Your account has not been created, make sure all fields are filled out correctly.',
         });
+
         return;
+
       }
 
       toast({
         title: 'Success',
-        description: 'You are now signed in!',
+        description: 'Your account has been created!',
         variant: 'default',
       });
 
-      router.push("/dashboard")
-
+      router.push('/dashboard')
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Registration error:', error);
       toast({
         title: 'Error',
-        description: 'Failed to sign in. Please try again.',
+        description: 'Failed to create account. Please try again.',
         variant: 'destructive',
       });
     }
   };
-
 
   return (
     <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-foreground">
-            Sign in to your account
+            Sign up to StartupPlanner
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-medium text-primary hover:text-primary/90">
-              Register
+            Have an account?{' '}
+            <Link href="/login" className="font-medium text-primary hover:text-primary/90">
+              Log in
             </Link>
           </p>
         </div>
@@ -127,46 +134,46 @@ export default function LoginPage() {
                 )}
               />
             ))}
-            <div className="flex items-center justify-between">
-              <FormField
-                control={form.control}
-                name="rememberMe"
-                render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="h-4 w-4 rounded text-primary focus:ring-primary"
-                      />
-                    </FormControl>
-                    <FormLabel htmlFor="rememberMe" className="ml-2 block text-sm text-muted-foreground">
-                      Remember me
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
-              <div className="text-sm">
-                <Link href="#" className="font-medium text-primary hover:text-primary/90">
-                  Forgot your password?
-                </Link>
-              </div>
-            </div>
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="h-4 w-4 rounded text-primary focus:ring-primary"
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="rememberMe" className="ml-2 block text-sm text-muted-foreground">
+                    Remember me
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
             <Button
               type="submit"
               className="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              Sign in
+              Sign up
             </Button>
           </form>
         </Form>
 
-        <div>
-          <Button className='w-full gap-2' onClick={() => handleCanvaLogin(router)}>
-            Login with
-            <CanvaIcon />
-          </Button>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+          </div>
         </div>
+
+        <Button className='w-full gap-2' onClick={() => handleCanvaLogin(router)} variant="outline">
+          <CanvaIcon />
+          Sign up with Canva
+        </Button>
       </div>
     </div>
   );
