@@ -15,7 +15,7 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/v1/account/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account/`, {
       method: 'PUT',
       headers: {
         'X-CSRFToken': CSRF_TOKEN.value,
