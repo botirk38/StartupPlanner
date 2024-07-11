@@ -15,11 +15,29 @@ export async function POST(req: NextRequest) {
     });
 
     if (response.ok) {
-      return NextResponse.json({ message: 'Registered Successfully' }, { status: response.status });
+      const responseData = await response.json();
+
+      // Create a new response
+      const newResponse = NextResponse.json(
+        responseData,
+        { status: response.status }
+      );
+
+      // Get the cookies from the original response
+      const responseCookies = response.headers.getSetCookie();
+
+      // Set the cookies in the new response
+      responseCookies.forEach(cookie => {
+        newResponse.headers.append('Set-Cookie', cookie);
+      });
+
+      return newResponse;
     } else {
       const error = await response.json();
       return NextResponse.json(error, { status: response.status });
     }
+
+
   } catch (err: any) {
     console.log("Server error: ", err);
 
