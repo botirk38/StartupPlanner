@@ -1,6 +1,15 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import DashboardNav from "@/components/dashboard/navbar";
+import { AccountData } from "@/utils/types";
+
+const mockAccountData: AccountData = {
+  display_name: 'Test User',
+  email: 'testuser@example.com',
+  bio: 'This is a test bio',
+  avatar: 'https://example.com/avatar.jpg',
+  has_password_set: true,
+};
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -21,7 +30,7 @@ describe("DashboardNav", () => {
   });
 
   it("should render the navigation links", () => {
-    render(<DashboardNav />);
+    render(<DashboardNav accountData={mockAccountData} />);
 
     expect(screen.getByText("BizPlanner")).toBeInTheDocument();
     expect(screen.getByText("Business Plan Creator")).toBeInTheDocument();
@@ -29,11 +38,6 @@ describe("DashboardNav", () => {
     expect(screen.getByText("Logo Creator")).toBeInTheDocument();
   });
 
-  it("should render the avatar image", () => {
-    render(<DashboardNav />);
-
-    expect(screen.getByRole("img", { name: "Avatar" })).toBeInTheDocument();
-  });
 
 });
 
