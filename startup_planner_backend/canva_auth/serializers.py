@@ -1,6 +1,46 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import CustomUser, BillingInfo
+from .models import BillingInfo
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+
+    """
+    Serializer for CustomUser model to handle user registration.
+    """
+    password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+    remember_me = serializers.BooleanField(required=False, default=False)
+
+    class Meta:
+        model = User
+        fields = ['email', 'display_name', 'password',
+                  'confirm_password', 'remember_me']
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('confirm_password')
+        remember_me = validated_data.pop('remember_me', False)
+        user = User.objects.create_user(**validated_data)
+
+        if remember_me:
+            self.context['request'].session.set_expiry(1209600)  # 2 weeks
+
+        return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    remember_me = serializers.BooleanField(required=False, default=False)
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -8,8 +48,8 @@ class AccountSerializer(serializers.ModelSerializer):
     Serializer for CustomUser model to handle account details.
     """
     class Meta:
-        model = CustomUser
-        fields = ['display_name', 'email', 'bio', 'avatar', 'has_password_set']
+        model = User
+        fields = ['display_name', 'email', 'bio', 'avatar']
 
 
 class BillingSerializer(serializers.ModelSerializer):
@@ -70,4 +110,3 @@ class SecuritySerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "Current password is not correct.")
         return value
-

@@ -1,8 +1,41 @@
-
 import React from 'react';
 import FileTextIcon from '../icons/file-text-icon';
 import PencilIcon from '../icons/pencil-icon';
 import ImageIcon from '../icons/image-icon';
+
+interface Feature {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  title: string;
+  description: string;
+}
+
+const features: Feature[] = [
+  {
+    icon: FileTextIcon,
+    title: 'Business Plan Generator',
+    description: 'Generate a comprehensive business plan with just a few clicks.',
+  },
+  {
+    icon: PencilIcon,
+    title: 'Copywriting Tool',
+    description: 'Create compelling copy for your website, marketing materials, and more.',
+  },
+  {
+    icon: ImageIcon,
+    title: 'Logo and Branding Generator',
+    description: 'Generate professional logos and branding assets for your business.',
+  },
+];
+
+const FeatureCard: React.FC<Feature> = ({ icon: Icon, title, description }) => (
+  <div className="bg-background rounded-lg shadow-md p-6">
+    <div className="flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4 mx-auto">
+      <Icon className="w-8 h-8 text-primary-foreground" />
+    </div>
+    <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+    <p className="text-muted-foreground">{description}</p>
+  </div>
+);
 
 const FeaturesSection: React.FC = () => (
   <section className="py-16 lg:py-24" id="features">
@@ -14,31 +47,9 @@ const FeaturesSection: React.FC = () => (
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div className="bg-background rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4 mx-auto">
-            <FileTextIcon className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">Business Plan Generator</h3>
-          <p className="text-muted-foreground">Generate a comprehensive business plan with just a few clicks.</p>
-        </div>
-        <div className="bg-background rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4 mx-auto">
-            <PencilIcon className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">Copywriting Tool</h3>
-          <p className="text-muted-foreground">
-            Create compelling copy for your website, marketing materials, and more.
-          </p>
-        </div>
-        <div className="bg-background rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4 mx-auto">
-            <ImageIcon className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">Logo and Branding Generator</h3>
-          <p className="text-muted-foreground">
-            Generate professional logos and branding assets for your business.
-          </p>
-        </div>
+        {features.map((feature, index) => (
+          <FeatureCard key={index} {...feature} />
+        ))}
       </div>
     </div>
   </section>

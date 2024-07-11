@@ -1,4 +1,9 @@
+"use server"
+
+
+
 import { cookies } from "next/headers";
+import { AccountData } from "./types";
 
 export async function getAccountData() {
   const cookieStore = cookies();

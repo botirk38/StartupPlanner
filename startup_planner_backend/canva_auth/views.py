@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from django.conf import settings
 from django.shortcuts import redirect
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -19,7 +19,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import resend
 from urllib.parse import urlencode
-from .serializers import AccountSerializer, BillingSerializer, SecuritySerializer
+from .serializers import AccountSerializer, BillingSerializer, SecuritySerializer, UserRegistrationSerializer, UserLoginSerializer
 from .models import BillingInfo
 from .utils import upload_to_vercel_blob
 
@@ -183,6 +183,36 @@ class CanvaCallbackAPIView(APIView):
         login(request, user)
         dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
         return redirect(dashboard_url)
+
+
+class RegisterAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            login(request, user)
+            return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            serializer.validated_data.pop('remember_me')
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user)
+                return Response({"message": "Login successful."})
+            else:
+                return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPIView(APIView):

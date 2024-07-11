@@ -1,7 +1,9 @@
+"use client"
+
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -18,6 +20,8 @@ const accountSchema = z.object({
   avatar: z.any().optional(),
 });
 
+type AccountFormValues = z.infer<typeof accountSchema>;
+
 interface AccountFormProps {
   accountData: AccountData;
 }
@@ -27,7 +31,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarUrl, setAvatarUrl] = useState(accountData.avatar);
 
-  const accountForm = useForm({
+  const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountSchema),
     defaultValues: {
       display_name: accountData.display_name,
@@ -37,11 +41,13 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
     },
   });
 
-  const onSubmitAccount: SubmitHandler<typeof accountSchema._type> = async (data) => {
+  const onSubmit: SubmitHandler<AccountFormValues> = async (data) => {
     const formData = new FormData();
-    formData.append("display_name", data.display_name);
-    formData.append("email", data.email);
-    formData.append("bio", data.bio);
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined) {
+        formData.append(key, value);
+      }
+    });
     if (avatarFile) {
       formData.append("avatar", avatarFile);
     }
@@ -54,8 +60,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast({ title: "Account settings update failed.", description: errorData });
-        return;
+        throw new Error(errorData.message || "Failed to update account settings");
       }
 
       const updatedData = await response.json();
@@ -66,7 +71,11 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
         description: "Your account settings have been updated successfully.",
       });
     } catch (error: any) {
-      toast({ title: "Account settings update failed.", description: "Please try again later." });
+      toast({
+        title: "Account settings update failed.",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -77,70 +86,66 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
         <CardDescription className="dark:text-white">Update your personal information and preferences.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Form {...accountForm}>
-          <form onSubmit={accountForm.handleSubmit(onSubmitAccount)} className="space-y-8">
-            <FormField
-              control={accountForm.control}
-              name="display_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Name" {...field} className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={accountForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email" {...field} className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={accountForm.control}
-              name="bio"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bio</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Bio" {...field} className="min-h-[120px] dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={accountForm.control}
-              name="avatar"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Upload Avatar</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          setAvatarFile(file);
-                          field.onChange(file);
-                        }
-                      }}
-                      className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-24 w-24">
+                <AvatarImage src={avatarUrl} alt="User avatar" />
+                <AvatarFallback>{accountData.display_name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <FormField
+                control={form.control}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Upload Avatar</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setAvatarFile(file);
+                            field.onChange(file);
+                          }
+                        }}
+                        className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {['display_name', 'email', 'bio'].map((fieldName) => (
+              <FormField
+                key={fieldName}
+                control={form.control}
+                name={fieldName as keyof AccountFormValues}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{fieldName === 'display_name' ? 'Name' : fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}</FormLabel>
+                    <FormControl>
+                      {fieldName === 'bio' ? (
+                        <Textarea
+                          {...field}
+                          placeholder={`Enter your ${fieldName}`}
+                          className="min-h-[120px] dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
+                        />
+                      ) : (
+                        <Input
+                          {...field}
+                          placeholder={`Enter your ${fieldName}`}
+                          className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
+                        />
+                      )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
             <Button type="submit" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
               Save Changes
             </Button>

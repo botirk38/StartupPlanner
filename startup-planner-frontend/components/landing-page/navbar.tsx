@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-primary-foreground py-4">
+    <nav className="hidden bg-primary-foreground py-4 md:block">
       <div className="container mx-auto lg:px-8 flex items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="flex items-center" prefetch={false}>
