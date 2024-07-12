@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,12 +12,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { AccountData } from "@/utils/types";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const accountSchema = z.object({
   display_name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Invalid email address." }),
-  bio: z.string(),
-  avatar: z.any().optional(),
+  bio: z.string().max(500, { message: "Bio must not exceed 500 characters." }),
+  avatar: z
+    .any()
+    .refine((file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE), {
+      message: "Max file size is 5MB.",
+    })
+    .refine((file) => !file || (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)), {
+      message: "Only .jpg, .jpeg, .png and .webp formats are supported.",
+    })
+    .optional(),
 });
 
 type AccountFormValues = z.infer<typeof accountSchema>;
@@ -29,7 +41,11 @@ interface AccountFormProps {
 const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
   const { toast } = useToast();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState(accountData.avatar);
+  const [avatarPreview, setAvatarPreview] = useState(accountData.avatar);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
 
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountSchema),
@@ -41,7 +57,20 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
     },
   });
 
+  const handleAvatarChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, []);
+
   const onSubmit: SubmitHandler<AccountFormValues> = async (data) => {
+    setIsSubmitting(true);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined) {
@@ -64,18 +93,22 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
       }
 
       const updatedData = await response.json();
-      setAvatarUrl(updatedData.avatar);
+      setAvatarPreview(updatedData.avatar);
 
       toast({
         title: "Account settings updated",
         description: "Your account settings have been updated successfully.",
       });
+      setIsDialogOpen(false);
+
     } catch (error: any) {
       toast({
         title: "Account settings update failed.",
         description: error.message || "Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -90,7 +123,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex items-center space-x-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={avatarUrl} alt="User avatar" />
+                <AvatarImage src={avatarPreview} alt="User avatar" />
                 <AvatarFallback>{accountData.display_name.charAt(0)}</AvatarFallback>
               </Avatar>
               <FormField
@@ -102,13 +135,10 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
                     <FormControl>
                       <Input
                         type="file"
-                        accept="image/*"
+                        accept={ACCEPTED_IMAGE_TYPES.join(",")}
                         onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setAvatarFile(file);
-                            field.onChange(file);
-                          }
+                          handleAvatarChange(e);
+                          field.onChange(e.target.files?.[0]);
                         }}
                         className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
                       />
@@ -136,7 +166,7 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
                       ) : (
                         <Input
                           {...field}
-                          placeholder={`Enter your ${fieldName}`}
+                          placeholder={`Enter your display name`}
                           className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-white"
                         />
                       )}
@@ -146,9 +176,27 @@ const AccountForm: React.FC<AccountFormProps> = ({ accountData }) => {
                 )}
               />
             ))}
-            <Button type="submit" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-              Save Changes
-            </Button>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button type="button" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                  Save Changes
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will update your account settings. Are you sure you want to continue?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={form.handleSubmit(onSubmit)} disabled={isSubmitting}>
+                    {isSubmitting ? "Updating..." : "Confirm"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </form>
         </Form>
       </CardContent>

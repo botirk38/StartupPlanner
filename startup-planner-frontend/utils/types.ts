@@ -11,7 +11,6 @@ export type AccountData = {
   email: string,
   bio: string
   avatar?: string,
-  has_password_set: boolean,
 
 }
 

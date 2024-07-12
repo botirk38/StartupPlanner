@@ -15,7 +15,6 @@ const mockAccountData: AccountData = {
   email: 'testuser@example.com',
   bio: 'This is a test bio',
   avatar: 'https://example.com/avatar.jpg',
-  has_password_set: true,
 };
 
 describe('MobileNav', () => {
