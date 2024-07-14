@@ -38,11 +38,11 @@ jobs:
         run: |
           echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
 
-      - name: Check versions
+      - name: Prepare fresh database
+        working-directory: startup_planner_backend
         run: |
-          python -V
-          python -c "import django; print(django.get_version())"
-          python -c "import sqlite3; print(sqlite3.sqlite_version)"
+          rm -f db.sqlite3
+          python manage.py migrate
 
       - name: Run tests
         working-directory: startup_planner_backend
