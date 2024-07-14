@@ -54,8 +54,8 @@ jobs:
       
       - name: Commit changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "btrghstk@gmail.com"
+          git config --local user.name "botirk38"
           git add -A
           git diff-index --quiet HEAD || (git commit -m "Auto-format Python code" && git push)
       
