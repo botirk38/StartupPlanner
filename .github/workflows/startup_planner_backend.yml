@@ -43,22 +43,10 @@ jobs:
           echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
           echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432/github_actions" >> $GITHUB_ENV
       
-      - name: Auto-format with autopep8
-        working-directory: startup_planner_backend
-        run: |
-          autopep8 --in-place --recursive .
-      
       - name: Run linting
         working-directory: startup_planner_backend
         run: flake8 .
-      
-      - name: Commit changes
-        run: |
-          git config --local user.email "btrghstk@gmail.com"
-          git config --local user.name "botirk38"
-          git add -A
-          git diff-index --quiet HEAD || (git commit -m "Auto-format Python code" && git push)
-      
+    
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
