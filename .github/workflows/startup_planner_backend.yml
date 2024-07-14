@@ -12,6 +12,18 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,17 +49,13 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
-
-      - name: Prepare fresh database
-        working-directory: startup_planner_backend
-        run: |
-          rm -f db.sqlite3
-          python manage.py migrate
+          echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432/github_actions" >> $GITHUB_ENV
 
       - name: Run tests
         working-directory: startup_planner_backend
         env: 
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
         run: |
           python manage.py test
 
