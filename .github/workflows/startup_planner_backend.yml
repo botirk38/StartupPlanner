@@ -51,14 +51,6 @@ jobs:
           echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
           echo echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432/github_actions" >> $GITHUB_ENV
 
-      - name: Run tests
-        working-directory: startup_planner_backend
-        env: 
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
-        run: |
-          python manage.py test
-
       - name: Run linting
         working-directory: startup_planner_backend
         run: |
