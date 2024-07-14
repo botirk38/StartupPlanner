@@ -18,4 +18,3 @@ class BusinessRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Business.objects.filter(user=self.request.user)
-

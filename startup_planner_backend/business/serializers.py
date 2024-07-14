@@ -11,4 +11,3 @@ class BusinessSerializer(serializers.ModelSerializer):
                   'stage', 'stage_description', 'funding_amount', 'team_size',
                   'founding_date', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
-

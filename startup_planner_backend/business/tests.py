@@ -88,4 +88,3 @@ class BusinessViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Business.objects.filter(
             pk=self.business1.pk).exists())
-
