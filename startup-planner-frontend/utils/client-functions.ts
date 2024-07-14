@@ -21,7 +21,7 @@ export const handleCanvaLogin = (router: any) => {
     });
     return;
   }
-  const canvaAuthUrl = `${baseUrl}/canva/auth`;
+  const canvaAuthUrl = `${baseUrl}/auth/canva/`;
   router.push(canvaAuthUrl);
 };
 

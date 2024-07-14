@@ -26,3 +26,26 @@ export type SecurityData = {
   new_password: string,
   confirm_password: string,
 }
+
+
+
+export type Business = {
+  id: number;
+  name: string;
+  description: string;
+  long_description?: string;
+  industry: string;
+  stage: 'Idea' | 'MVP' | 'Growth' | 'Maturity';
+  stage_description?: string;
+  funding_amount: number;
+  team_size: number;
+  founding_date?: string;
+  created_at: string;
+  updated_at: string;
+  user_id: number;
+};
+
+
+export type NewBusiness = Omit<Business, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
+
+

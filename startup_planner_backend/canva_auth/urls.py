@@ -4,8 +4,8 @@ from .views import CanvaCallbackAPIView, CanvaAuthAPIView, ContactUsAPIView, Che
 app_name = 'canva_auth'
 
 urlpatterns = [
-    path('canva/auth/', CanvaAuthAPIView.as_view(), name='canva_auth'),
-    path('canva/auth/callback/',
+    path('canva/', CanvaAuthAPIView.as_view(), name='canva_auth'),
+    path('canva/callback/',
          CanvaCallbackAPIView.as_view(), name='canva_callback'),
     path('contact-us/', ContactUsAPIView.as_view(), name='contact_us'),
     path('check-auth/', CheckAuthAPIView.as_view(), name='check_auth'),

@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
 
   try {
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/billing/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/billing/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

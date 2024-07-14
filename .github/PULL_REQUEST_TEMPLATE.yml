@@ -1,0 +1,7 @@
+template:
+  - name: Bug Fix
+    file: .github/PULL_REQUEST_TEMPLATE/bug_fix.md
+  - name: Feature Request
+    file: .github/PULL_REQUEST_TEMPLATE/feature_request.md
+  - name: Documentation Update
+    file: .github/PULL_REQUEST_TEMPLATE/documentation_update.md

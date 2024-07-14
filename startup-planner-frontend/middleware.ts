@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 // Middleware function to check authentication status
 export async function middleware(request: NextRequest) {
-  const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/check-auth/`;
+  const apiEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/auth/check-auth/`;
   console.log("Endpoint: ", apiEndpoint)
 
   // Retrieve the session ID from the cookies
@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
 
 // Configure the middleware to match specific paths
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/business/:path*'],
 };
 
 

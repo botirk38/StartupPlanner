@@ -95,7 +95,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /login with/i }));
 
-    expect(mockPush).toHaveBeenCalledWith('http://localhost:3000/canva/auth');
+    expect(mockPush).toHaveBeenCalledWith('http://localhost:3000/auth/canva/');
   });
 
   test('displays error message when Canva login URL is not configured', () => {

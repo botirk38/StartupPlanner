@@ -13,7 +13,7 @@ async function getBillingData() {
 
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/billing/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/billing/`, {
 
     headers: {
       'Content-Type': 'application/json',
