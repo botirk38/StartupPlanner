@@ -180,8 +180,20 @@ class CanvaCallbackAPIView(APIView):
             }
         )
 
+        is_first_login = user.is_first_time_login()
+        logger.info(f"First Login: {is_first_login}")
         login(request, user)
+
+        if is_first_login:
+
+            # TODO: Make sure this is redirected to a set password page before deploying
+            onboarding_url = f"{settings.FRONTEND_URL}/business/create"
+            return redirect(onboarding_url)
+
+        login(request, user)
+
         dashboard_url = f"{settings.FRONTEND_URL}/dashboard"
+
         return redirect(dashboard_url)
 
 
@@ -209,7 +221,10 @@ class LoginAPIView(APIView):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return Response({"message": "Login successful."})
+
+                return Response({
+                    "message": "Login successful.",
+                })
             else:
                 return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

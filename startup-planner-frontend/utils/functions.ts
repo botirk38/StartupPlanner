@@ -13,7 +13,7 @@ export async function getAccountData() {
     throw new Error("Session ID not found in cookies");
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/account/`, {
     headers: {
       'Content-Type': 'application/json',
       'Cookie': `sessionid=${SESSION_ID.value}`

@@ -47,7 +47,7 @@ export default async function RootLayout({
         <div className="flex min-h-screen w-full flex-col bg-muted/40 dark:bg-gray-900">
           <DashboardNav accountData={accountData} />
           <MobileNavDashboard accountData={accountData} />
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 ">
             <Sidebar />
             <div className="flex flex-1 flex-col p-4">
               {children}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'canva_auth',
+    'business',
     'rest_framework',
     'corsheaders',
 ]

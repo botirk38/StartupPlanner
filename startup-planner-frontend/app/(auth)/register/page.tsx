@@ -87,7 +87,7 @@ export default function RegisterPage() {
         variant: 'default',
       });
 
-      router.push('/dashboard')
+      router.push('/business/create')
     } catch (error) {
       console.error('Registration error:', error);
       toast({
