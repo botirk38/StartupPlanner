@@ -34,8 +34,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r startup_planner_backend/requirements.txt
 
+      - name: Set up environment variables
+        run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+
       - name: Run tests
         working-directory: startup_planner_backend
+        env: 
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
           python manage.py test
 
