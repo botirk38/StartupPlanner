@@ -1,5 +1,5 @@
 
 [flake8]
-max-line-length = 140
+max-line-length = 180
 exclude = .git,__pycache__,venv,*/migrations/*
 
