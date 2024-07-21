@@ -10,7 +10,6 @@ from .utils import (
 from ..models import OAuthState
 from datetime import timedelta
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 logger = logging.getLogger(__name__)
 
 User = get_user_model()
