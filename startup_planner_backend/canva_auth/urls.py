@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import CanvaCallbackAPIView, CanvaAuthAPIView, ContactUsAPIView, CheckAuthAPIView, AccountView, BillingView, SecurityView, LogoutAPIView, RegisterAPIView, LoginAPIView
+
+from .views import (
+    CanvaCallbackAPIView, CanvaAuthAPIView,
+    CheckAuthAPIView, AccountView,
+    BillingView, SecurityView,
+    LogoutAPIView, RegisterAPIView,
+    LoginAPIView
+)
 
 app_name = 'canva_auth'
 
@@ -7,7 +14,6 @@ urlpatterns = [
     path('canva/', CanvaAuthAPIView.as_view(), name='canva_auth'),
     path('canva/callback/',
          CanvaCallbackAPIView.as_view(), name='canva_callback'),
-    path('contact-us/', ContactUsAPIView.as_view(), name='contact_us'),
     path('check-auth/', CheckAuthAPIView.as_view(), name='check_auth'),
     path('account/', AccountView.as_view(), name='account'),
     path('billing/', BillingView.as_view(), name='billing'),

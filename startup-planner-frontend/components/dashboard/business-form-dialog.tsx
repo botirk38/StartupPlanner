@@ -51,6 +51,7 @@ export function BusinessFormDialog({ isOpen, onClose, business, onUpdate, onCrea
   });
 
   function onSubmit(values: FormValues) {
+    console.log("Calling")
     if (business) {
       onUpdate({ ...business, ...values });
     } else {
@@ -212,7 +213,7 @@ export function BusinessFormDialog({ isOpen, onClose, business, onUpdate, onCrea
 
             <div className="flex flex-col-reverse sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 pt-4 mt-auto">
               <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">Cancel</Button>
-              <Button type="submit" form="business-form" className="w-full sm:w-auto">
+              <Button type="submit" className="w-full sm:w-auto">
                 {business ? "Save changes" : "Create Business"}
               </Button>
             </div>

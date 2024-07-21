@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include([
         path('auth/', include('canva_auth.urls', namespace='canva_auth')),
+        path('landing_page/', include('landing_page.urls', namespace="landing_page")),
         path('', include('business.urls', namespace="business")),
     ])),
 ]
