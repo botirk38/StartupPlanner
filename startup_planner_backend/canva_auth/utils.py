@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.utils import timezone
 import requests
-from vercel_blob import put
 
 
 def refresh_access_token(user):
@@ -30,8 +29,3 @@ def get_valid_access_token(user):
         return user.access_token
     else:
         return refresh_access_token(user)
-
-
-def upload_to_vercel_blob(file):
-    response = put(file.name, file.read(), {'access': 'public'})
-    return response['url']

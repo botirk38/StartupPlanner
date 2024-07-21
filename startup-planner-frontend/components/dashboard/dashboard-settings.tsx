@@ -22,22 +22,32 @@ function DashboardSettings({ sidebarOpen }: { sidebarOpen: boolean }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setTheme(localStorage.getItem('theme') as Theme || 'light');
-      setLanguage(localStorage.getItem('language') as Language || 'en');
+      const savedTheme = localStorage.getItem('theme') as Theme;
+      const savedLanguage = localStorage.getItem('language') as Language;
+
+      if (savedTheme) setTheme(savedTheme);
+      if (savedLanguage) setLanguage(savedLanguage);
+
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     }
   }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  const handleThemeChange = (value: Theme) => {
+    setTheme((prevTheme) => {
+      const newTheme = value;
+      localStorage.setItem('theme', newTheme);
+      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+      return newTheme;
+    });
+  }
 
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
-
-  const handleThemeChange = (value: Theme) => setTheme(value);
-  const handleLanguageChange = (value: Language) => setLanguage(value);
+  const handleLanguageChange = (value: Language) => {
+    setLanguage((prevLanguage) => {
+      const newLanguage = value;
+      localStorage.setItem('language', newLanguage);
+      return newLanguage;
+    });
+  }
 
   return (
     <Dialog>
@@ -80,8 +90,6 @@ function DashboardSettings({ sidebarOpen }: { sidebarOpen: boolean }) {
     </Dialog>
   );
 }
-
-
 
 export default DashboardSettings;
 

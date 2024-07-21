@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'canva_auth',
     'business',
+    'landing_page',
     'rest_framework',
     'corsheaders',
 ]
