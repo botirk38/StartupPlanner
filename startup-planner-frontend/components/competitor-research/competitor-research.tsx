@@ -24,6 +24,7 @@ type Competitor = {
   growthTrend: 'Steady' | 'Increasing' | 'Decreasing';
 };
 
+
 const CompetitorResearch: React.FC = () => {
   const [selectedCompetitor, setSelectedCompetitor] = useState<Competitor | null>(null);
 

@@ -24,12 +24,11 @@ export async function POST(req: NextRequest) {
       );
 
       // Get the cookies from the original response
-      const responseCookies = response.headers.getSetCookie();
+      const setCookieHeader = response.headers.get('Set-Cookie');
 
-      // Set the cookies in the new response
-      responseCookies.forEach(cookie => {
-        newResponse.headers.append('Set-Cookie', cookie);
-      });
+      if (setCookieHeader) {
+        newResponse.headers.set('Set-Cookie', setCookieHeader);
+      }
 
       return newResponse;
     } else {
