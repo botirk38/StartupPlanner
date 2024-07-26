@@ -43,7 +43,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     Custom user model extending AbstractBaseUser and PermissionsMixin.
     Includes additional fields and methods specific to application requirements.
     """
-    canva_user_id = models.CharField(max_length=1024, unique=True)
+    canva_user_id = models.CharField(
+        max_length=1024, unique=True, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255, blank=True)
     team_id = models.CharField(max_length=255, blank=True, null=True)

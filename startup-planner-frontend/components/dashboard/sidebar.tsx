@@ -9,10 +9,12 @@ import BriefcaseIcon from "../icons/briefcase-icon";
 import FilePenIcon from "../icons/filepen-icon";
 import BrushIcon from "../icons/brush-icon";
 import DashboardSettings from "./dashboard-settings";
+import { Search } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "#", icon: BriefcaseIcon, label: "Business Plan Creator" },
   { href: "#", icon: FilePenIcon, label: "Marketing Content Creator" },
+  { href: "/dashboard/competitor-research", icon: Search, label: "Competitor Research" },
   { href: "#", icon: BrushIcon, label: "Logo Creator" },
 ];
 
