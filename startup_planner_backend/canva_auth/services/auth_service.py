@@ -1,7 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import upload_to_vercel_blob
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+
+from django.contrib.auth import authenticate
 
 
 class AuthService:
@@ -29,5 +31,32 @@ class AuthService:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
-    def login_user(request, user):
+    def register_user(serializer):
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'message': 'User registered successfully',
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def logout_user(request, user):
+        logout(request, user)
+
+        return Response({
+            "message": "User logged out successfully"
+        })
+
+    @staticmethod
+    def login_user(request, email, password):
+
+        user = authenticate(request=request, email=email, password=password)
+
+        if user is None:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
         login(request, user)
+
+        return Response({
+            "message": "User logged in successfully",
+        }, status=status.HTTP_200_OK)
