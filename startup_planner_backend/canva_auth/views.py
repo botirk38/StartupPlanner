@@ -22,7 +22,7 @@ from .services.auth_service import AuthService
 from .services.user_service import UserService
 from .services.canva_service import CanvaService
 from .services.billing_service import BillingService
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import login
 
 # Load environment variables from .env file
 load_dotenv()
