@@ -22,6 +22,7 @@ from .services.auth_service import AuthService
 from .services.user_service import UserService
 from .services.canva_service import CanvaService
 from .services.billing_service import BillingService
+from django.contrib.auth import authenticate, login, logout, get_user_model
 
 # Load environment variables from .env file
 load_dotenv()
@@ -83,7 +84,7 @@ class CanvaCallbackAPIView(APIView):
         user = CanvaService.create_or_update_user(
             user_info, user_profile, access_token, refresh_token, expires_in)
 
-        AuthService.login_user(request, user)
+        login(request, user)
 
         if user.is_first_time_login():
             return redirect(f"{settings.FRONTEND_URL}/business/create")
@@ -94,7 +95,8 @@ class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        return AuthService.register_user(UserRegistrationSerializer(data=request.data))
+        serializer = UserRegistrationSerializer(data=request.data)
+        return AuthService.register_user(request, serializer)
 
 
 class LoginAPIView(APIView):
