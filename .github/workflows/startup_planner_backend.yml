@@ -66,6 +66,7 @@ jobs:
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
             --platform linux/amd64 \
+            --env-file .env \
             -t botirk/startup_planner_backend \
             --load \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
