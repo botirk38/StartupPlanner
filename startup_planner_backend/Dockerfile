@@ -16,23 +16,21 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 COPY ./requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+  pip install -r requirements.txt
 
 # Copy project files to the working directory
 COPY . .
 
-# Run migrations
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-
-# Collect static files
-RUN mkdir -p /usr/src/app/staticfiles
-RUN python manage.py collectstatic --noinput
+# Run migrations and collect static files
+RUN python manage.py makemigrations && \
+  python manage.py migrate && \
+  mkdir -p /usr/src/app/staticfiles && \
+  python manage.py collectstatic --noinput
 
 # Expose port 8000 for the application
 EXPOSE 8000
 
 # Run the application
-CMD ["sh", "-c", "gunicorn startup_planner_backend.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 3"]
+CMD ["gunicorn", "startup_planner_backend.wsgi:application", "--bind", "0.0.0.0:$PORT", "--timeout", "120", "--workers", "3"]
 
