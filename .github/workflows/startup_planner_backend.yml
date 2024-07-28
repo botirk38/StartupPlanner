@@ -70,6 +70,7 @@ jobs:
             -t botirk/startup_planner_backend \
             --load \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             .
       - name: Move cache
         run: |
