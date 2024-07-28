@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from openai import OpenAI
 from ..models import Competitor, Business
@@ -14,7 +15,11 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-client = OpenAI()
+api_key = os.getenv('OPENAI_API_KEY')
+if not api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
+
+client = OpenAI(api_key=api_key)
 
 
 class Tool(BaseModel):
