@@ -77,7 +77,6 @@ jobs:
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
             --platform linux/amd64 \
             --build-arg SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} \
-            --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             --build-arg DATABASE_URL=postgres://postgres:postgres@localhost:5432/github_actions \
             -t botirk/startup_planner_backend \
             --load \
