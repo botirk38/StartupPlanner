@@ -1,3 +1,4 @@
+from typing import Optional
 from django.contrib.auth import get_user_model
 import requests
 from django.conf import settings
@@ -11,21 +12,20 @@ from ..models import OAuthState
 from datetime import timedelta
 from django.utils import timezone
 logger = logging.getLogger(__name__)
-
 User = get_user_model()
 
 
 class CanvaService:
 
     @staticmethod
-    def generate_oauth_params():
+    def generate_oauth_params() -> tuple[str, str, str]:
         code_verifier = generate_code_verifier()
         code_challenge = generate_code_challenge(code_verifier)
         state = generate_state()
         return code_verifier, code_challenge, state
 
     @staticmethod
-    def get_auth_params(code_challenge, state):
+    def get_auth_params(code_challenge: str, state: str) -> dict[str, str]:
         return {
             'response_type': 'code',
             'client_id': settings.CANVA_CLIENT_ID,
@@ -37,7 +37,7 @@ class CanvaService:
         }
 
     @staticmethod
-    def exchange_code_for_tokens(code, code_verifier):
+    def exchange_code_for_tokens(code: str, code_verifier: str) -> Optional[dict[str, any]]:
         token_url = 'https://api.canva.com/rest/v1/oauth/token'
         data = {
             'grant_type': 'authorization_code',
@@ -56,7 +56,7 @@ class CanvaService:
         return response.json()
 
     @staticmethod
-    def get_user_info(access_token):
+    def get_user_info(access_token: str) -> Optional[dict[str, any]]:
         user_info_url = 'https://api.canva.com/rest/v1/users/me'
         user_info_response = requests.get(
             user_info_url, headers={'Authorization': f'Bearer {access_token}'})
@@ -66,7 +66,7 @@ class CanvaService:
         return user_info_response.json()
 
     @staticmethod
-    def validate_oauth_state(state: OAuthState):
+    def validate_oauth_state(state: OAuthState) -> Optional[OAuthState]:
 
         try:
             oauth_state = OAuthState.objects.get(state=state)
@@ -82,7 +82,7 @@ class CanvaService:
         return oauth_state
 
     @staticmethod
-    def get_user_profile(access_token):
+    def get_user_profile(access_token: str) -> Optional[dict[str, any]]:
         user_profile_url = 'https://api.canva.com/rest/v1/users/me/profile'
         user_profile_response = requests.get(user_profile_url, headers={
                                              'Authorization': f'Bearer {access_token}'})
@@ -92,7 +92,7 @@ class CanvaService:
         return user_profile_response.json()
 
     @staticmethod
-    def create_or_update_user(user_info, user_profile, access_token, refresh_token, expires_in) -> User:
+    def create_or_update_user(user_info: dict[str, any], user_profile: dict[str, any], access_token: str, refresh_token: str, expires_in: int) -> User:
 
         team_user = user_info.get('team_user', {})
         user_id = team_user.get('user_id', '')

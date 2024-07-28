@@ -25,6 +25,7 @@ const fontBody = Syne({
 });
 
 import { getAccountData } from "@/utils/functions";
+import { BusinessProvider } from "@/context/business-context";
 
 export default async function RootLayout({
   children,
@@ -50,7 +51,9 @@ export default async function RootLayout({
           <div className="flex flex-1 ">
             <Sidebar />
             <div className="flex flex-1 flex-col p-4">
-              {children}
+              <BusinessProvider>
+                {children}
+              </BusinessProvider>
             </div>
           </div>
         </div>

@@ -1,18 +1,22 @@
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import upload_to_vercel_blob
+from rest_framework.serializers import Serializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class UserService:
-    @staticmethod
-    def get_account_details(user, serializer_class):
+    @classmethod
+    def get_account_details(cls, user: User, serializer_class: Serializer):
         serializer = serializer_class(user)
         data = serializer.data
         data['is_first_time_login'] = user.is_first_time_login()
         return Response(data)
 
-    @staticmethod
-    def update_account_details(user, data, serializer_class):
+    @classmethod
+    def update_account_details(cls, user: User, data: dict[str, any], serializer_class: Serializer):
         file = data.get('avatar')
         if file:
             try:

@@ -16,7 +16,7 @@ export function BusinessActions({ onEdit, onDelete, onCreateNew, selectedBusines
   return (
     <div className="flex items-center gap-2 sm:gap-4">
       {/* Mobile view */}
-      <div className="sm:hidden">
+      <div className="lg:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
@@ -42,7 +42,7 @@ export function BusinessActions({ onEdit, onDelete, onCreateNew, selectedBusines
       </div>
 
       {/* Desktop view */}
-      <div className="hidden sm:flex items-center gap-2">
+      <div className="hidden lg:flex items-center gap-2">
         {selectedBusiness && (
           <>
             <Button

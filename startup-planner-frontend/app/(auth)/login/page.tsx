@@ -20,6 +20,7 @@ import Link from 'next/link';
 import CanvaIcon from '@/components/icons/canva-icon';
 import { useRouter } from 'next/navigation';
 import { handleCanvaLogin } from '@/utils/client-functions';
+import { useState } from 'react';
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -37,6 +38,7 @@ const formFields = [
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -50,6 +52,8 @@ export default function LoginPage() {
   const onSubmit = async (user_data: LoginFormValues) => {
     try {
       console.log('Form values:', user_data);
+      setIsLoading(true);
+
 
       const response = await fetch("/api/auth/login", {
         method: 'POST',
@@ -87,6 +91,8 @@ export default function LoginPage() {
         description: 'Failed to sign in. Please try again.',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -154,16 +160,17 @@ export default function LoginPage() {
             </div>
             <Button
               type="submit"
+              disabled={isLoading}
               className="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
         </Form>
 
         <div>
-          <Button className='w-full gap-2' onClick={() => handleCanvaLogin(router)}>
-            Login with
+          <Button className='w-full gap-2' disabled={isLoading} onClick={() => handleCanvaLogin(router)}>
+            {isLoading ? 'Please wait...' : 'Login with'}
             <CanvaIcon />
           </Button>
         </div>

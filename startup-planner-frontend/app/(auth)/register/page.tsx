@@ -20,6 +20,7 @@ import Link from 'next/link';
 import CanvaIcon from '@/components/icons/canva-icon';
 import { handleCanvaLogin } from '@/utils/client-functions';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const RegisterFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -44,6 +45,8 @@ const formFields = [
 export default function RegisterPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
@@ -57,6 +60,7 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (user_data: RegisterFormValues) => {
+    setIsLoading(true);
     try {
       console.log('Form values:', user_data);
 
@@ -95,6 +99,8 @@ export default function RegisterPage() {
         description: 'Failed to create account. Please try again.',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -154,9 +160,10 @@ export default function RegisterPage() {
             />
             <Button
               type="submit"
+              disabled={isLoading}
               className="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              Sign up
+              {isLoading ? 'Signing up...' : 'Sign up'}
             </Button>
           </form>
         </Form>
@@ -170,9 +177,9 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <Button className='w-full gap-2' onClick={() => handleCanvaLogin(router)} variant="outline">
+        <Button className='w-full gap-2' onClick={() => handleCanvaLogin(router)} disabled={isLoading} variant="outline">
           <CanvaIcon />
-          Sign up with Canva
+          {isLoading ? 'Please wait...' : 'Sign up with Canva'}
         </Button>
       </div>
     </div>

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { BusinessSelector } from "./dashboard/business-selector";
 import { BusinessActions } from "./dashboard/business-action";
-import { BusinessPlanGenerator } from "./dashboard/business-plan-generator";
 import { BusinessFormDialog } from "./dashboard/business-form-dialog";
 
 import { Loader2 } from "lucide-react";
@@ -11,15 +10,23 @@ import { useToast } from "@/components/ui/use-toast";
 import { Business, NewBusiness } from "@/utils/types";
 import { StartupOverview } from "./dashboard/startup-overview";
 import { QuickActions } from "./dashboard/quick-actions";
+import { useBusinessContext } from "@/context/business-context";
 
 export function Dashboard() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
-  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
+  const { selectedBusiness, setSelectedBusiness } = useBusinessContext();
 
+
+
+
+  useEffect(() => {
+
+    console.log("Selected Business: ", selectedBusiness);
+  }, [selectedBusiness])
 
   useEffect(() => {
     loadBusinesses();
