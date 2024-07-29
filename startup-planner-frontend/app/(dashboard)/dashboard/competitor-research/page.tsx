@@ -1,5 +1,6 @@
 "use client"
 import CompetitorResearch from "@/components/competitor-research/competitor-research";
+import { BusinessProvider } from "@/context/business-context";
 
 function CompetitorResearchPage() {
 

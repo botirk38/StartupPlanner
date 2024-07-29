@@ -7,18 +7,18 @@ import { IconProps } from '@/utils/types';
 
 export default function LogoutPage() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background dark:bg-gray-900 px-4 py-12 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="mx-auto max-w-md text-center"
       >
-        <LogOutIcon className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          You&apos; ve been logged out
+        <LogOutIcon className="mx-auto h-12 w-12 text-primary dark:text-primary-400" />
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground dark:text-white sm:text-4xl">
+          You&apos;ve been logged out
         </h1>
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4 text-muted-foreground dark:text-gray-300">
           Thank you for using our application. Click the button below to return to the login page.
         </p>
         <motion.div
@@ -28,7 +28,7 @@ export default function LogoutPage() {
         >
           <Link
             href="/login"
-            className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="inline-flex items-center rounded-md bg-primary dark:bg-primary-600 px-4 py-2 text-sm font-medium text-primary-foreground dark:text-white shadow-sm transition-colors hover:bg-primary/90 dark:hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
           >
             Go to Login
           </Link>

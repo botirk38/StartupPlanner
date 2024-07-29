@@ -29,7 +29,7 @@ const formSchema = z.object({
   stage_description: z.string().optional(),
   funding_amount: z.number().min(0, "Funding amount must be positive"),
   team_size: z.number().int().positive("Team size must be a positive integer"),
-  founding_date: z.string().optional(),
+  founding_date: z.string()
 });
 
 type FormValues = z.infer<typeof formSchema>;

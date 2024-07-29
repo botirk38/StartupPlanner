@@ -88,6 +88,7 @@ class CanvaCallbackAPIView(APIView):
 
         if user.is_first_time_login():
             return redirect(f"{settings.FRONTEND_URL}/business/create")
+
         return redirect(f"{settings.FRONTEND_URL}/dashboard")
 
 

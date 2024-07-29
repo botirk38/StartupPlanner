@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 import MountainIcon from "../icons/mountain-icon";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { AccountData } from '@/utils/types';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { AvatarFallback } from '@radix-ui/react-avatar';
 import { getFallBackName } from '@/utils/client-functions';
+import { UserIcon } from 'lucide-react';
+
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Business Plan Creator" },
@@ -56,7 +56,7 @@ function DashboardNav({ accountData }: DashboardNavProps) {
 
   return (
     <header className="hidden md:flex z-30 h-14 items-center justify-between border-b bg-background dark:bg-gray-900 px-4 md:px-6">
-      <Link href="/dashboard" className="flex items-center gap-2">
+      <Link href="/dashboard" className="flex items-center  justify-center gap-2">
         <MountainIcon className="h-6 w-6 dark:text-gray-100" />
         <span className="text-lg font-semibold dark:text-gray-100">BizPlanner</span>
       </Link>
@@ -73,10 +73,12 @@ function DashboardNav({ accountData }: DashboardNavProps) {
         ))}
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className='hover:cursor-pointer'>
             <Avatar>
               <AvatarImage src={accountData.avatar} />
-              <AvatarFallback>{getFallBackName(accountData)}</AvatarFallback>
+              <AvatarFallback className='dark:text-white w-full p-1'>
+                {getFallBackName(accountData) || <UserIcon />}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
