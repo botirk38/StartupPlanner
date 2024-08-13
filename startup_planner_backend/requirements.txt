@@ -12,7 +12,7 @@ click==8.1.7
 colorama==0.4.3
 distro==1.9.0
 dj-database-url==2.2.0
-Django==5.0.7
+Django>=5.1
 django-cors-headers==4.4.0
 django-heroku==0.3.1
 djangorestframework==3.15.2
