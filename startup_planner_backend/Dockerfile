@@ -36,5 +36,4 @@ RUN python manage.py makemigrations && \
 EXPOSE 8000
 
 # Run the application
-CMD ["gunicorn", "startup_planner_backend.wsgi:application", "--bind", "0.0.0.0:$PORT", "--timeout", "120", "--workers", "3"]
-
+CMD gunicorn startup_planner_backend.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 3
