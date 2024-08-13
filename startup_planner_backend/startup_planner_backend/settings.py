@@ -33,6 +33,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
 
+PORT = int(os.getenv('PORT', 5000))
 # Application definition
 
 INSTALLED_APPS = [
