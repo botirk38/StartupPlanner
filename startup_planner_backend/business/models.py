@@ -25,8 +25,8 @@ class Business(models.Model):
     description = models.TextField(_("Description"))
     long_description = models.TextField(_("Long Description"), blank=True)
     stage = models.CharField(_("Stage"), max_length=20, choices=Stage.choices)
-    stage_description = models.CharField(
-        _("Stage Description"), max_length=255, blank=True)
+    stage_description = models.TextField(
+        _("Stage Description"), blank=True)
     funding_amount = models.DecimalField(
         _("Funding Amount"), max_digits=15, decimal_places=2, default=0)
     team_size = models.PositiveIntegerField(_("Team Size"), default=1)

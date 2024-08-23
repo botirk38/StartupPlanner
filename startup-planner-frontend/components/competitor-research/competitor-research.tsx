@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from 'lucide-react';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Trash } from 'lucide-react';
+import { SiCanva } from 'react-icons/si';
+
 
 type Strength = {
   description: string;
@@ -46,6 +48,7 @@ const CompetitorResearch: React.FC = () => {
   const [nextPage, setNextPage] = useState<string | null>(null);
   const [previousPage, setPreviousPage] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
 
   const handlePageChange = (page: number) => {
@@ -380,6 +383,24 @@ const CompetitorResearch: React.FC = () => {
                 </>
               )}
             </Button>
+
+
+            <Button
+
+              size="sm"
+              onClick={() => setIsExporting(true)}
+              disabled={isExporting}
+              className='bg-[#00C4CC] hover:bg-[#00A4AC] text-white font-bold gap-2  '
+
+            >
+
+              <SiCanva className="h-5 w-5" />
+
+              Export to Canva
+
+            </Button>
+
+
 
 
           </div>
